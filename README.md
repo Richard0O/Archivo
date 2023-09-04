@@ -66,3 +66,47 @@ class Program
         ZipFile.CreateFromDirectory(parentFolder, finalZipPath);
     }
 }
+
+
+//////////////////////////////////
+
+using System;
+using System.IO;
+using System.IO.Compression;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Por favor, introduce la ruta del archivo ZIP:");
+        string rutaArchivoZip = Console.ReadLine();
+
+        Console.WriteLine("Por favor, introduce la carpeta de destino para la extracción:");
+        string carpetaDestino = Console.ReadLine();
+
+        try
+        {
+            // Verifica si el archivo ZIP existe
+            if (File.Exists(rutaArchivoZip))
+            {
+                // Asegúrate de que la carpeta de destino exista o créala si no existe
+                if (!Directory.Exists(carpetaDestino))
+                {
+                    Directory.CreateDirectory(carpetaDestino);
+                }
+
+                // Extrae el archivo ZIP en la carpeta de destino
+                ZipFile.ExtractToDirectory(rutaArchivoZip, carpetaDestino);
+                Console.WriteLine("Archivo ZIP extraído exitosamente.");
+            }
+            else
+            {
+                Console.WriteLine("El archivo ZIP especificado no existe.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Ocurrió un error al extraer el archivo ZIP: " + ex.Message);
+        }
+    }
+}
