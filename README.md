@@ -110,3 +110,25 @@ class Program
         }
     }
 }
+
+
+7777777
+using ICSharpCode.SharpZipLib.Zip;
+using System.IO;
+
+public void ComprimirZip(string archivoOrigen, string archivoDestino)
+{
+    using (FileStream archivoDestinoStream = File.Create(archivoDestino))
+    using (ZipOutputStream zipStream = new ZipOutputStream(archivoDestinoStream))
+    {
+        ZipEntry entry = new ZipEntry(Path.GetFileName(archivoOrigen));
+        zipStream.PutNextEntry(entry);
+
+        using (FileStream archivoOrigenStream = File.OpenRead(archivoOrigen))
+        {
+            byte[] buffer = new byte[4096];
+            StreamUtils.Copy(archivoOrigenStream, zipStream, buffer);
+        }
+        zipStream.CloseEntry();
+    }
+}
