@@ -189,3 +189,52 @@ class Program
         return true; // Cambia esto según tus necesidades
     }
 }
+
+\/////
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string rarFilePath = "ruta_del_archivo.rar";
+        string extractPath = "ruta_de_la_carpeta_destino";
+        string password = "tu_contraseña";
+
+        try
+        {
+            using (Stream stream = File.OpenRead(rarFilePath))
+            using (var reader = ReaderFactory.Open(stream, new ReaderOptions() { Password = password }))
+            {
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        // Validar el tipo de archivo si es necesario
+                        if (reader.Entry.Key.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+                        {
+                            reader.WriteEntryToDirectory(extractPath, new ExtractionOptions()
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true // Opcional: Sobrescribir si ya existe
+                            });
+                            Console.WriteLine($"Archivo extraído: {reader.Entry.Key}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"El archivo {reader.Entry.Key} no es un archivo válido.");
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al extraer archivos RAR: {ex.Message}");
+        }
+    }
+}
