@@ -132,3 +132,60 @@ public void ComprimirZip(string archivoOrigen, string archivoDestino)
         zipStream.CloseEntry();
     }
 }
+
+\///////
+
+comenzar.using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoRAR = "archivo.rar"; // Ruta del archivo RAR que deseas extraer
+        string directorioDestino = "destino"; // Directorio donde deseas extraer los archivos
+
+        try
+        {
+            using (Stream stream = File.OpenRead(archivoRAR))
+            using (var reader = ReaderFactory.Open(stream))
+            {
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        // Validar si el archivo es seguro antes de extraerlo (opcional)
+                        if (EsArchivoSeguro(reader.Entry))
+                        {
+                            reader.WriteEntryToDirectory(directorioDestino, new ExtractionOptions()
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true // Si deseas sobrescribir archivos existentes
+                            });
+                            Console.WriteLine($"Extrayendo: {reader.Entry.Key}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Archivo inseguro: {reader.Entry.Key}");
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Extracción completada con éxito.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al extraer el archivo RAR: {ex.Message}");
+        }
+    }
+
+    static bool EsArchivoSeguro(IEntry entry)
+    {
+        // Agrega tus propias validaciones de seguridad aquí si es necesario
+        // Por ejemplo, puedes verificar la extensión del archivo o escanearlo con un antivirus.
+        return true; // Cambia esto según tus necesidades
+    }
+}
