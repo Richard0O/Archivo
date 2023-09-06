@@ -1,4 +1,4 @@
-I78using System;
+-fgI78using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -270,3 +270,61 @@ using (Stream stream = File.OpenRead(archivoRAR))
         }
     }
 }
+
+@aaaaaaa
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string rutaArchivoRAR = "archivo.rar";
+        string directorioDestino = "directorio_destino";
+        string contraseña = "tu_contraseña";
+
+        // Validar la contraseña antes de la extracción (opcional)
+        bool contraseñaValida = ValidarContraseña(rutaArchivoRAR, contraseña);
+
+        if (contraseñaValida)
+        {
+            // Extraer el archivo RAR
+            using (Stream stream = File.OpenRead(rutaArchivoRAR))
+            using (var reader = ReaderFactory.Open(stream, new ReaderOptions { Password = contraseña }))
+            {
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        reader.WriteEntryToDirectory(directorioDestino, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Contraseña incorrecta.");
+        }
+    }
+
+    static bool ValidarContraseña(string rutaArchivoRAR, string contraseña)
+    {
+        using (Stream stream = File.OpenRead(rutaArchivoRAR))
+        using (var reader = ReaderFactory.Open(stream, new ReaderOptions { Password = contraseña }))
+        {
+            while (reader.MoveToNextEntry())
+            {
+                if (reader.Entry.IsEncrypted)
+                {
+                    // Si la entrada está cifrada, la contraseña es válida
+                    return true;
+                }
+            }
+        }
+        // Si no hay entradas cifradas, la contraseña es incorrecta
+        return false;
+    }
+}Asegúrate de reemplazar "archivo.rar", "
