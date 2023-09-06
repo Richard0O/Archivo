@@ -1,4 +1,4 @@
-using System;
+I78using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -235,6 +235,38 @@ class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Error al extraer archivos RAR: {ex.Message}");
+        }
+    }
+}
+
+########
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Archives;
+using SharpCompress.Readers;Utiliza el siguiente código para extraer un archivo RAR con contraseña:string archivoRAR = "ruta_del_archivo.rar";
+string destino = "ruta_de_destino";
+string contraseña = "contraseña_del_archivo";
+
+using (Stream stream = File.OpenRead(archivoRAR))
+{
+    var readerOptions = new ReaderOptions
+    {
+        Password = contraseña // Establece la contraseña aquí
+    };
+
+    var archive = ArchiveFactory.Open(stream, readerOptions);
+    
+    foreach (var entry in archive.Entries)
+    {
+        if (!entry.IsDirectory)
+        {
+            entry.WriteToDirectory(destino, new ExtractionOptions
+            {
+                ExtractFullPath = true,
+                Overwrite = true
+            });
         }
     }
 }
