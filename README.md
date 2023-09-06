@@ -327,4 +327,49 @@ class Program
         // Si no hay entradas cifradas, la contraseña es incorrecta
         return false;
     }
-}Asegúrate de reemplazar "archivo.rar", "
+}Asegúrate de reemplazar "archivo.rar", 
+
+
+Ffffffxff
+"using System;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta al archivo RAR protegido con contraseña
+        string rarFilePath = "ruta/al/archivo.rar";
+        
+        // Solicitar la contraseña al usuario mediante la consola
+        Console.Write("Ingresa la contraseña del archivo RAR: ");
+        string password = Console.ReadLine();
+        
+        try
+        {
+            // Abrir el archivo RAR con contraseña
+            using (var archive = ArchiveFactory.Open(rarFilePath, new ReaderOptions { Password = password }))
+            {
+                // Extraer todos los archivos en el directorio actual
+                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                {
+                    entry.WriteToDirectory(Directory.GetCurrentDirectory(), new ExtractionOptions()
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                    Console.WriteLine($"Archivo extraído: {entry.Key}");
+                }
+            }
+
+            Console.WriteLine("Extracción completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al extraer el archivo: {ex.Message}");
+        }
+    }
+}
