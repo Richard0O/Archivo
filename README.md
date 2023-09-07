@@ -373,3 +373,43 @@ class Program
         }
     }
 }
+
+
+Yyyyyy
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Rar;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string archivoRAR = "ruta_del_archivo.rar";
+        string destino = "ruta_de_destino";
+        string contraseña = "tu_contraseña";
+
+        using (var archivo = RarArchive.Open(archivoRAR, new ReaderOptions
+        {
+            Password = contraseña,
+            ArchiveEncoding = ArchiveEncoding.Default
+        }))
+        {
+            foreach (var entrada in archivo.Entries)
+            {
+                if (!entrada.IsDirectory)
+                {
+                    entrada.WriteToDirectory(destino, new ExtractionOptions
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+            }
+        }
+
+        Console.WriteLine("Extracción completada.");
+    }
+}
