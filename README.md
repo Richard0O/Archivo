@@ -1,46 +1,4 @@
-Descomprimir aquí (Extract Here):using (var stream = File.OpenRead("archivo.rar"))
-{
-    var reader = ReaderFactory.Open(stream);
-    while (reader.MoveToNextEntry())
-    {
-        if (!reader.Entry.IsDirectory)
-        {
-            reader.WriteEntryToDirectory(".", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-        }
-    }
-}Descomprimir creando una carpeta (Extract to Folder):using (var stream = File.OpenRead("archivo.rar"))
-{
-    var reader = ReaderFactory.Open(stream);
-    while (reader.MoveToNextEntry())
-    {
-        if (!reader.Entry.IsDirectory)
-        {
-            var extractionPath = Path.Combine("carpeta_destino", reader.Entry.Key);
-            reader.WriteEntryToDirectory(extractionPath, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-        }
-    }
-}Descomprimir varios archivos (Extract Specific Files):using (var stream = File.OpenRead("archivo.rar"))
-{
-    var reader = ReaderFactory.Open(stream);
-    while (reader.MoveToNextEntry())
-    {
-        if (!reader.Entry.IsDirectory)
-        {
-            // Agrega lógica para extraer solo los archivos que deseas aquí.
-        }
-    }
-}Descomprimir archivos RAR con contraseña (Extract RAR Files with Password):using (var stream = File.OpenRead("archivo.rar"))
-{
-    var reader = ReaderFactory.Open(stream, new ReaderOptions() { Password = "tu_contraseña" });
-    while (reader.MoveToNextEntry())
-    {
-        if (!reader.Entry.IsDirectory)
-        {
-            reader.WriteEntryToDirectory(".", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
-        }
-    }
-}
-
+Archivos 
 Ttttttt
 
 
@@ -125,3 +83,251 @@ class Program
         }
     }
 }
+
+////////////////////////////////////////////7
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            // 1. Extraer un archivo ZIP
+            string zipPath = "archivozip.zip";
+            string extractPath = @"C:\Users\ricky\Desktop\Archivo2\extraccion";
+            string newZipPath = "ArchivoComprimido.zip";
+            string manifestPath = "Archivo Manifiesto.txt";
+
+            ExtractZipFile(zipPath, extractPath);
+
+            //Leer archivos y mostrarlos en una lista
+            List<string> fileList = ListFiles(extractPath);
+            Console.WriteLine("Archivos extraídos:");
+            foreach (var file in fileList)
+            {
+                Console.WriteLine(file);
+            }
+
+            //Crear un archivo manifiesto
+            CreateManifest(fileList, manifestPath);
+            Console.WriteLine("Archivo manifiesto creado: " + manifestPath);
+
+            //Comprimir archivos en un nuevo archivo ZIP
+
+            CompressFiles(fileList, newZipPath);
+            Console.WriteLine("Archivos comprimidos en: " + newZipPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+
+    // Método para extraer un archivo ZIP
+    static void ExtractZipFile(string zipPath, string extractPath)
+    {
+        try
+        {
+
+            ZipFile.ExtractToDirectory(zipPath, extractPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al comprimir en archivo ZIP: {ex.Message}");
+
+            if (!File.Exists(zipPath))
+            {
+                throw new FileNotFoundException("El archivo ZIP no existe.");
+            }
+
+            if (!Directory.Exists(extractPath))
+            {
+                Directory.CreateDirectory(extractPath);
+            }
+        }
+    }
+
+
+
+    // Método para listar archivos en una carpeta y subdirectorios
+    static List<string> ListFiles(string folderPath)
+    {
+
+        List<string> fileList = new List<string>();
+        foreach (var file in fileList)
+        {
+            Console.WriteLine(file);
+        }
+        foreach (string file in Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories))
+        {
+
+            fileList.Add(file);
+
+        }
+        return fileList;
+    }
+
+    // Método para crear un archivo manifiesto
+    static void CreateManifest(List<string> fileList, string manifestPath)
+    {
+        try
+        {
+
+            File.WriteAllLines(manifestPath, fileList);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al crear Manifiesto: {ex.Message}");
+        }
+    }
+
+    // Método para comprimir archivos en un nuevo archivo ZIP
+    static void CompressFiles(List<string> fileList, string newZipPath)
+    {
+        try
+        {
+
+            using (ZipArchive archive = ZipFile.Open(newZipPath, ZipArchiveMode.Create))
+            {
+                foreach (string file in fileList)
+                {
+                    archive.CreateEntryFromFile(file, Path.GetFileName(file));
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al Lista los archivos: {ex.Message}");
+        }
+    }
+}
+
+/////////////////////////////////////////777
+
+
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+using System.Linq;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        string zipPath = "archivozip.zip";
+        string extractPath = @"C:\Users\ricky\Desktop\ArchivoZip\Extraccion";
+        string newZipPath = "ArchivoComprimido.zip";
+        string manifestPath = "Archivo Manifiesto.txt";
+
+        try
+        {
+            //Extraer el archivo 
+             ExtractZipFile(zipPath, extractPath);
+
+            //Leer y mostrar los archivos extraídos
+            List<string> archivosExtraidos = ListarArchivos(extractPath);
+            Console.WriteLine("Archivos extraídos:");
+            foreach (string archivo in archivosExtraidos)
+            {
+                Console.WriteLine(archivo);                                                                                     
+            }
+
+            // Paso 3: Crear el archivo manifiesto
+            CrearManifiesto(extractPath, manifestPath);
+
+            // Paso 4: Comprimir en un archivo ZIP
+            ComprimirEnZip(extractPath, newZipPath);
+            Console.WriteLine("Se ha creado el archivo ZIP.");
+
+            // Limpieza: Eliminar la carpeta de extracción
+            //Directory.Delete(carpetaExtraccion, true);
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+   // Método para extraer un archivo ZIP
+    static void ExtractZipFile(string zipPath, string extractPath)
+    {
+        try
+        {
+            using (var stream = File.OpenRead(zipPath))
+            {
+                var reader = ReaderFactory.Open(stream);
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        reader.WriteEntryToDirectory(extractPath, new ExtractionOptions()
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true
+                        });
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al extraer el Archivo: " + ex.Message);
+        }
+    }
+// Método para listar archivos en una carpeta y subdirectorios
+    static List<string> ListarArchivos(string extractPath)
+    {
+        return Directory.GetFiles(extractPath, "*", SearchOption.AllDirectories).ToList();
+    }
+
+    // Método para crear un archivo manifiesto
+    static void CrearManifiesto(string extractPath, string manifestPath)
+    {
+        try
+        {
+            var archivos = ListarArchivos(extractPath);
+            File.WriteAllLines(manifestPath, archivos);
+            Console.WriteLine("Se ha creado el archivo manifiesto.");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al crear el Archivo Manifiesto: " + ex.Message);
+        }
+
+    }
+
+    // Método para comprimir archivos en un nuevo archivo ZIP
+    static void ComprimirEnZip(string extractionPath, string newZipPath)
+    {
+        try
+        {
+            using (var stream = new FileStream(newZipPath, FileMode.Create))
+            using (var writer = WriterFactory.Open(stream, ArchiveType.Zip, new WriterOptions(CompressionType.Deflate)))
+            {
+                {
+                    writer.WriteAll(extractionPath, "*", SearchOption.AllDirectories);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al crear el Archivo Manifiesto: " + ex.Message);
+        }
+
+    }
+}
+
