@@ -440,3 +440,31 @@ class Program
         Console.WriteLine("Archivos comprimidos con éxito.");
     }
 }
+
+/mmmmmm
+
+using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+{
+    archive.AddEntry("nombre_del_archivo.rar", "ruta_del_archivo_a_comprimir.txt");
+    archive.SaveTo("ruta_de_la_carpeta_destino");
+}Comprimir varios archivos en una carpeta en un archivo RAR:using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+{
+    var archivos = new List<string>
+    {
+        "ruta_del_archivo1.txt",
+        "ruta_del_archivo2.txt"
+        // Agrega más archivos según sea necesario
+    };
+
+    foreach (var archivo in archivos)
+    {
+        archive.AddEntry(Path.GetFileName(archivo), archivo);
+    }
+
+    archive.SaveTo("ruta_de_la_carpeta_destino");
+}Agregar contraseña a un archivo RAR:using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+{
+    archive.AddEntry("nombre_del_archivo.rar", "ruta_del_archivo_a_comprimir.txt");
+    archive.Password = "tu_contraseña";
+    archive.SaveTo("ruta_de_la_carpeta_destino");
+}
