@@ -330,4 +330,39 @@ class Program
 
     }
 }
+Bbbbbbbbb
 
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoRAR = "ruta_del_archivo.rar";
+        string destino = "carpeta_destino";
+        string contraseña = "tu_contraseña";
+
+        using (Stream stream = File.OpenRead(archivoRAR))
+        using (var reader = ReaderFactory.Open(stream, new ReaderOptions { Password = contraseña }))
+        {
+            while (reader.MoveToNextEntry())
+            {
+                if (!reader.Entry.IsDirectory)
+                {
+                    reader.WriteEntryToDirectory(destino, new ExtractionOptions
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+            }
+        }
+
+        Console.WriteLine("¡Archivo RAR descomprimido con éxito!");
+    }
+}
