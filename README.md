@@ -413,4 +413,30 @@ class Program
         }
     }
 }
-```
+```nnnnn
+
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Archives;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string sourceDirectory = @"C:\Ruta\De\Origen";
+        string rarFilePath = @"C:\Ruta\Del\Archivo\Rar\rarchivo.rar";
+
+        using (var archive = ArchiveFactory.Create(ArchiveType.Rar, rarFilePath, CompressionType.Rar))
+        {
+            foreach (var filePath in Directory.EnumerateFiles(sourceDirectory))
+            {
+                archive.AddEntry(Path.GetFileName(filePath), filePath);
+            }
+        }
+
+        Console.WriteLine("Archivos comprimidos con éxito.");
+    }
+}
