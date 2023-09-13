@@ -468,3 +468,41 @@ using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
     archive.Password = "tu_contraseña";
     archive.SaveTo("ruta_de_la_carpeta_destino");
 }
+
+444444
+
+Descomprimir aquí (Extract Here):using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+public class RarExtractor
+{
+    public static void ExtractHere(string rarFilePath)
+    {
+        using (var archive = ArchiveFactory.Open(rarFilePath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    entry.WriteToDirectory(Path.GetDirectoryName(rarFilePath), new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                }
+            }
+        }
+    }
+}Descomprimir creando una carpeta (Extract to Folder):public class RarExtractor
+{
+    public static void ExtractToFolder(string rarFilePath, string destinationFolder)
+    {
+        using (var archive = ArchiveFactory.Open(rarFilePath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    entry.WriteToDirectory(destinationFolder, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                }
+            }
+        }
+    }
