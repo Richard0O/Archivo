@@ -91,3 +91,61 @@ class Program
         }
     }
 }
+
+
+
+Mmmmmmm
+
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+string archivoOrigen = "archivo.txt";
+string archivoDestino = "archivo.rar";
+
+using (var stream = new FileStream(archivoDestino, FileMode.Create))
+{
+    using (var writer = WriterFactory.Open(stream, ArchiveType.Rar))
+    {
+        writer.Write(archivoOrigen, Path.GetFileName(archivoOrigen));
+    }
+}Comprimir varios archivos en un archivo RAR:using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+string[] archivosOrigen = new string[] { "archivo1.txt", "archivo2.txt" };
+string archivoDestino = "archivos.rar";
+
+using (var stream = new FileStream(archivoDestino, FileMode.Create))
+{
+    using (var writer = WriterFactory.Open(stream, ArchiveType.Rar))
+    {
+        foreach (var archivo in archivosOrigen)
+        {
+            writer.Write(archivo, Path.GetFileName(archivo));
+        }
+    }
+}Comprimir archivos RAR con contraseña:using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+string archivoOrigen = "archivo.txt";
+string archivoDestino = "archivo_con_contraseña.rar";
+string contraseña = "tu_contraseña";
+
+var opciones = new CompressionInfo()
+{
+    Password = contraseña
+};
+
+using (var stream = new FileStream(archivoDestino, FileMode.Create))
+{
+    using (var writer = WriterFactory.Open(stream, ArchiveType.Rar, opciones))
+    {
+        writer.Write(archivoOrigen, Path.GetFileName(archivoOrigen));
+    }
+}
