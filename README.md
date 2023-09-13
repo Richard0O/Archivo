@@ -41,3 +41,53 @@ Descomprimir aquí:using (var stream = File.OpenRead("archivo.rar"))
 };
 
 reader.WriteEntryToDirectory(".", options);
+
+
+Tttttgggg
+
+using System;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Rar;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoRAR = "ruta_del_archivo.rar";
+        string destino = "carpeta_de_destino";
+
+        using (Stream stream = File.OpenRead(archivoRAR))
+        using (var archive = RarArchive.Open(stream))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    string destinationPath = Path.Combine(destino, entry.Key);
+
+                    if (File.Exists(destinationPath))
+                    {
+                        Console.Write($"El archivo {entry.Key} ya existe. ¿Desea reemplazarlo? (S/N): ");
+                        var respuesta = Console.ReadLine();
+
+                        if (respuesta.Trim().ToUpper() != "S")
+                        {
+                            continue; // No reemplazar el archivo
+                        }
+                    }
+
+                    entry.WriteTo(destinationPath, new ExtractionOptions()
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+
+                    Console.WriteLine($"Archivo {entry.Key} extraído.");
+                }
+            }
+        }
+    }
+}
