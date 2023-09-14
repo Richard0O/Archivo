@@ -1,4 +1,4 @@
-Descomprimir aquí:using (var stream = File.OpenRead("archivo.rar"))
+I8Descomprimir aquí:using (var stream = File.OpenRead("archivo.rar"))
 {
     using (var reader = RarReader.Open(stream))
     {
@@ -292,5 +292,71 @@ class Program
             archive.AddEntry(Path.GetFileName(sourceFilePath), sourceFilePath);
             archive.SaveTo(destinationArchivePath, new CompressionInfo { Type = CompressionType.Rar, Password = password });
         }
+    }
+}
+
+Iiiiikki
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;Define una clase que contenga los métodos para las operaciones de compresión:class CompressionManager
+{
+    public static void CompressFile(string sourceFile, string destinationArchive)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+        {
+            archive.AddEntry(Path.GetFileName(sourceFile), sourceFile);
+            archive.SaveTo(destinationArchive, CompressionType.Deflate);
+        }
+    }
+
+    public static void CompressFolder(string sourceFolder, string destinationArchive)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+        {
+            archive.AddAllFromDirectory(sourceFolder);
+            archive.SaveTo(destinationArchive, CompressionType.Deflate);
+        }
+    }
+
+    public static void CompressToFolder(string sourceFolder, string destinationFolder)
+    {
+        Directory.CreateDirectory(destinationFolder);
+
+        string archiveFileName = Path.Combine(destinationFolder, "compressed.zip");
+
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+        {
+            archive.AddAllFromDirectory(sourceFolder);
+            archive.SaveTo(archiveFileName, CompressionType.Deflate);
+        }
+    }
+
+    public static void CompressWithPassword(string sourceFile, string destinationArchive, string password)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+        {
+            archive.AddEntry(Path.GetFileName(sourceFile), sourceFile);
+            archive.SaveTo(destinationArchive, CompressionType.Deflate, new ZipWriterOptions(CompressionType.Deflate)
+            {
+                Password = password
+            });
+        }
+    }
+}Luego, puedes llamar a estos métodos desde tu programa principal:class Program
+{
+    static void Main(string[] args)
+    {
+        string sourceFile = "archivo.txt";
+        string sourceFolder = "carpeta";
+        string destinationArchive = "archivo.zip";
+        string destinationFolder = "carpeta_comprimida";
+        string password = "miContraseña";
+
+        CompressionManager.CompressFile(sourceFile, destinationArchive);
+        CompressionManager.CompressFolder(sourceFolder, destinationArchive);
+        CompressionManager.CompressToFolder(sourceFolder, destinationFolder);
+        CompressionManager.CompressWithPassword(sourceFile, destinationArchive, password);
     }
 }
