@@ -246,3 +246,51 @@ using (Stream stream = File.OpenWrite(archivoDestino))
         archive.SaveTo(stream, new ArchiveWriterOptions(CompressionType.Rar));
     }
 }
+
+
+Yyyyyyyyyyyyy
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        CompressFile("archivo.txt", "archivo.rar");
+        CompressFolder("carpetas", "carpetas.rar");
+        CompressWithPassword("documento.txt", "documento.rar", "miContraseña");
+    }
+
+    // Método para comprimir un archivo
+    static void CompressFile(string sourceFilePath, string destinationArchivePath)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+        {
+            archive.AddEntry(Path.GetFileName(sourceFilePath), sourceFilePath);
+            archive.SaveTo(destinationArchivePath, CompressionType.Rar);
+        }
+    }
+
+    // Método para comprimir varias carpetas en una carpeta
+    static void CompressFolder(string sourceFolderPath, string destinationArchivePath)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+        {
+            archive.AddAllFromDirectory(sourceFolderPath);
+            archive.SaveTo(destinationArchivePath, CompressionType.Rar);
+        }
+    }
+
+    // Método para comprimir un archivo con contraseña
+    static void CompressWithPassword(string sourceFilePath, string destinationArchivePath, string password)
+    {
+        using (var archive = ArchiveFactory.Create(ArchiveType.Rar))
+        {
+            archive.AddEntry(Path.GetFileName(sourceFilePath), sourceFilePath);
+            archive.SaveTo(destinationArchivePath, new CompressionInfo { Type = CompressionType.Rar, Password = password });
+        }
+    }
+}
