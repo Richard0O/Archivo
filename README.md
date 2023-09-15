@@ -850,3 +850,63 @@ class Program
         }
     }
 }
+
+Nnnnnnn
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        string sourceZipPath = "ruta_del_archivo.zip"; // Ruta del archivo ZIP que deseas descomprimir
+        string extractPath = "ruta_de_la_carpeta_de_destino"; // Ruta de la carpeta de destino
+
+        try
+        {
+            using (Stream stream = File.OpenRead(sourceZipPath))
+            using (var reader = ReaderFactory.Open(stream))
+            {
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        string fullPath = Path.Combine(extractPath, reader.Entry.Key);
+                        
+                        // Verificar si el archivo ya existe y preguntar si se desea reemplazar
+                        if (File.Exists(fullPath))
+                        {
+                            Console.WriteLine($"El archivo '{fullPath}' ya existe. ¿Desea reemplazarlo? (S/N)");
+                            string respuesta = Console.ReadLine();
+                            if (respuesta.Trim().ToUpper() != "S")
+                            {
+                                continue; // Saltar este archivo si no se desea reemplazar
+                            }
+                        }
+
+                        // Asegurarse de que el directorio de destino exista
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+
+                        // Extraer el archivo
+                        using (var entryStream = reader.OpenEntryStream())
+                        using (var output = File.Create(fullPath))
+                        {
+                            entryStream.CopyTo(output);
+                        }
+
+                        Console.WriteLine($"Archivo descomprimido: {fullPath}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir: {ex.Message}");
+        }
+    }
+}
