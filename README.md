@@ -414,3 +414,57 @@ class Program
         }
     }
 }
+
+
+Tttttt
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoComprimido = "ruta/archivo.rar"; // Ruta de tu archivo comprimido
+        string carpetaDestino = "ruta/destino"; // Carpeta donde se extraerán los archivos
+        
+        try
+        {
+            using (Stream stream = File.OpenRead(archivoComprimido))
+            {
+                var reader = ReaderFactory.Open(stream);
+
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        string outputPath = Path.Combine(carpetaDestino, reader.Entry.Key);
+
+                        if (File.Exists(outputPath))
+                        {
+                            Console.WriteLine($"El archivo {reader.Entry.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
+
+                            if (Console.ReadLine()?.Trim().ToUpper() == "S")
+                            {
+                                reader.WriteEntryTo(outputPath, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                            }
+                        }
+                        else
+                        {
+                            reader.WriteEntryTo(outputPath, ExtractOptions.ExtractFullPath);
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada con éxito.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
+        }
+    }
+}
