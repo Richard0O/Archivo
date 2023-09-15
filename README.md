@@ -689,3 +689,62 @@ class Program
         }
     }
 }
+
+
+4444
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Ingrese la ruta del archivo RAR:");
+        string rarFilePath = Console.ReadLine();
+
+        Console.WriteLine("Ingrese la ruta de destino:");
+        string destinationPath = Console.ReadLine();
+
+        try
+        {
+            using (var archive = ArchiveFactory.Open(rarFilePath))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (!entry.IsDirectory)
+                    {
+                        string destinationFilePath = Path.Combine(destinationPath, entry.Key);
+
+                        if (File.Exists(destinationFilePath))
+                        {
+                            Console.WriteLine($"El archivo {entry.Key} ya existe en la carpeta destino. ¿Desea reemplazarlo? (S/N)");
+                            string response = Console.ReadLine();
+
+                            if (response.Trim().Equals("N", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue; // Saltar este archivo
+                            }
+                        }
+
+                        entry.WriteTo(destinationFilePath, new ExtractionOptions()
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true
+                        });
+
+                        Console.WriteLine($"Archivo descomprimido: {entry.Key}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
+        }
+    }
+}
