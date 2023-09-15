@@ -692,112 +692,56 @@ class Program
 
 
 4444
-
 using System;
 using System.IO;
-using SharpCompress.Archives;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Ingrese la ruta del archivo RAR:");
-        string rarFilePath = Console.ReadLine();
-
-        Console.WriteLine("Ingrese la ruta de destino:");
-        string destinationPath = Console.ReadLine();
+        string archivoRAR = "archivo.rar";
+        string destino = "carpeta_destino";
 
         try
         {
-            using (var archive = ArchiveFactory.Open(rarFilePath))
+            using (var stream = File.OpenRead(archivoRAR))
             {
-                foreach (var entry in archive.Entries)
+                using (var reader = ReaderFactory.Open(stream))
                 {
-                    if (!entry.IsDirectory)
+                    while (reader.MoveToNextEntry())
                     {
-                        string destinationFilePath = Path.Combine(destinationPath, entry.Key);
-
-                        if (File.Exists(destinationFilePath))
+                        if (!reader.Entry.IsDirectory)
                         {
-                            Console.WriteLine($"El archivo {entry.Key} ya existe en la carpeta destino. ¿Desea reemplazarlo? (S/N)");
-                            string response = Console.ReadLine();
+                            string filePath = Path.Combine(destino, reader.Entry.Key);
 
-                            if (response.Trim().Equals("N", StringComparison.OrdinalIgnoreCase))
+                            // Verificar si el archivo ya existe
+                            if (File.Exists(filePath))
                             {
-                                continue; // Saltar este archivo
+                                Console.WriteLine($"El archivo {filePath} ya existe. ¿Deseas reemplazarlo? (S/N)");
+                                string respuesta = Console.ReadLine();
+
+                                if (respuesta.Trim().ToUpper() != "S")
+                                    continue; // Si no se desea reemplazar, saltar al siguiente archivo
                             }
+
+                            reader.WriteEntryToDirectory(destino, new ExtractionOptions()
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true // Esto reemplazará el archivo si ya existe
+                            });
+                            Console.WriteLine($"Archivo descomprimido: {filePath}");
                         }
-
-                        entry.WriteTo(destinationFilePath, new ExtractionOptions()
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = true
-                        });
-
-                        Console.WriteLine($"Archivo descomprimido: {entry.Key}");
                     }
                 }
             }
 
-            Console.WriteLine("Descompresión completada.");
+            Console.WriteLine("Descompresión completa.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
-        }
-    }
-}. Yyyyy
-
-
-
-using System;
-using System.IO;
-using SharpCompress.Archives;
-using SharpCompress.Common;
-
-class Program
-{
-    static void Main()
-    {
-        string archivoRAR = "tu_archivo.rar"; // Reemplaza con la ruta de tu archivo RAR
-        string directorioDestino = "directorio_destino"; // Reemplaza con el directorio de destino
-        
-        try
-        {
-            using (var archive = ArchiveFactory.Open(archivoRAR))
-            {
-                foreach (var entry in archive.Entries)
-                {
-                    if (!entry.IsDirectory)
-                    {
-                        string destinoArchivo = Path.Combine(directorioDestino, entry.Key);
-                        
-                        // Verifica si el archivo ya existe en el directorio de destino
-                        if (File.Exists(destinoArchivo))
-                        {
-                            Console.WriteLine($"El archivo {entry.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
-                            var respuesta = Console.ReadLine();
-                            if (respuesta.Trim().ToUpper() == "N")
-                                continue; // Ignorar el archivo existente
-                        }
-                        
-                        entry.WriteTo(destinoArchivo, new ExtractionOptions
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = true // Permite reemplazar archivos existentes
-                        });
-                        
-                        Console.WriteLine($"Archivo descomprimido: {entry.Key}");
-                    }
-                }
-            }
-            
-            Console.WriteLine("Descompresión completada.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
+            Console.WriteLine($"Error al descomprimir: {ex.Message}");
         }
     }
 }
