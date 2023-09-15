@@ -467,4 +467,67 @@ class Program
             Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
         }
     }
+
+
+555555
+
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            string archivoComprimido = "archivo.zip"; // Reemplaza con la ruta de tu archivo comprimido
+            string directorioDestino = "destino"; // Reemplaza con la carpeta donde deseas extraer los archivos
+
+            using (Stream stream = File.OpenRead(archivoComprimido))
+            using (var reader = ReaderFactory.Open(stream))
+            {
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        var entry = reader.Entry;
+
+                        string destinoArchivo = Path.Combine(directorioDestino, entry.Key);
+                        
+                        // Verificar si el archivo ya existe en el destino
+                        if (File.Exists(destinoArchivo))
+                        {
+                            Console.WriteLine($"El archivo {entry.Key} ya existe en el destino.");
+                            Console.Write("¿Deseas reemplazarlo? (Sí/No): ");
+                            string respuesta = Console.ReadLine();
+
+                            if (respuesta.Equals("No", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue; // Saltar este archivo
+                            }
+                        }
+
+                        // Extraer el archivo
+                        entry.WriteToDirectory(directorioDestino, new ExtractionOptions
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true // Esto reemplazará el archivo si ya existe
+                        });
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir: {ex.Message}");
+        }
+    }
 }
+```
+
+Este código verifica si el archivo ya existe en el directorio de destino y permite al usuario elegir si desea reemplazarlo o no. Asegúrate de ajustar las rutas y las opciones según tus necesidades específicas. Además, ten en cuenta que debes manejar las excepciones adecuadamente según tus requerimientos de manejo de errores.
