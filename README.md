@@ -745,3 +745,59 @@ class Program
         }
     }
 }
+
+Mmmmmmmm
+
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string origen = @"C:\ruta\carpeta_origen";
+        string destino = @"C:\ruta\carpeta_destino";
+
+        // Verificar si la carpeta de destino existe
+        if (Directory.Exists(destino))
+        {
+            Console.WriteLine("La carpeta de destino ya existe. ¿Desea reemplazarla? (S/N)");
+
+            // Leer la respuesta del usuario
+            string respuesta = Console.ReadLine();
+
+            if (respuesta.Equals("S", StringComparison.OrdinalIgnoreCase))
+            {
+                // Eliminar la carpeta de destino existente
+                Directory.Delete(destino, true);
+            }
+            else
+            {
+                Console.WriteLine("Operación cancelada.");
+                return;
+            }
+        }
+
+        // Copiar la carpeta de origen a la carpeta de destino
+        Directory.CreateDirectory(destino);
+        CopiarDirectorio(origen, destino);
+
+        Console.WriteLine("Carpeta copiada exitosamente.");
+    }
+
+    // Función para copiar un directorio y su contenido
+    static void CopiarDirectorio(string origen, string destino)
+    {
+        foreach (string archivo in Directory.GetFiles(origen))
+        {
+            string archivoDestino = Path.Combine(destino, Path.GetFileName(archivo));
+            File.Copy(archivo, archivoDestino);
+        }
+
+        foreach (string subdirectorio in Directory.GetDirectories(origen))
+        {
+            string subdirectorioDestino = Path.Combine(destino, Path.GetFileName(subdirectorio));
+            CopiarDirectorio(subdirectorio, subdirectorioDestino);
+        }
+    }
+}Este código copiará una carpeta
