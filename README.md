@@ -635,3 +635,57 @@ class Program
         }
     }
 }
+
+Hhhhhhhh
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string archivoRAR = "tu_archivo.rar";
+        string directorioDestino = "directorio_destino";
+
+        try
+        {
+            // Validar que el archivo RAR exista
+            if (!File.Exists(archivoRAR))
+            {
+                Console.WriteLine("El archivo RAR no existe.");
+                return;
+            }
+
+            // Crear el directorio de destino si no existe
+            if (!Directory.Exists(directorioDestino))
+            {
+                Directory.CreateDirectory(directorioDestino);
+            }
+
+            // Descomprimir el archivo RAR
+            using (var archive = ArchiveFactory.Open(archivoRAR))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (!entry.IsDirectory)
+                    {
+                        entry.WriteToDirectory(directorioDestino, new ExtractionOptions()
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true // Esto permite reemplazar archivos existentes
+                        });
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada con éxito.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al descomprimir el archivo RAR: " + ex.Message);
+        }
+    }
+}
