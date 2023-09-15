@@ -360,3 +360,57 @@ using SharpCompress.Common;Define una clase que contenga los métodos para las o
         CompressionManager.CompressWithPassword(sourceFile, destinationArchive, password);
     }
 }
+
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string archivoComprimido = "archivo.rar"; // Cambia esto al nombre de tu archivo comprimido
+        string directorioDestino = "destino"; // Cambia esto al directorio donde deseas descomprimir
+
+        try
+        {
+            using (var stream = File.OpenRead(archivoComprimido))
+            {
+                var reader = ReaderFactory.Open(stream);
+
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        string destinationFileName = Path.Combine(directorioDestino, reader.Entry.Key);
+
+                        if (File.Exists(destinationFileName))
+                        {
+                            Console.WriteLine($"El archivo {reader.Entry.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
+                            string respuesta = Console.ReadLine();
+                            if (respuesta.Trim().ToUpper() != "S")
+                            {
+                                continue; // Salta este archivo si no deseas reemplazarlo
+                            }
+                        }
+
+                        reader.WriteEntryToDirectory(directorioDestino, new ExtractionOptions()
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true // Permite reemplazar archivos existentes
+                        });
+                        Console.WriteLine($"Se descomprimió {reader.Entry.Key} a {destinationFileName}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completa.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir: {ex.Message}");
+        }
+    }
+}
