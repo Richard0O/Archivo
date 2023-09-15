@@ -747,4 +747,57 @@ class Program
             Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
         }
     }
+}. Yyyyy
+
+
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoRAR = "tu_archivo.rar"; // Reemplaza con la ruta de tu archivo RAR
+        string directorioDestino = "directorio_destino"; // Reemplaza con el directorio de destino
+        
+        try
+        {
+            using (var archive = ArchiveFactory.Open(archivoRAR))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (!entry.IsDirectory)
+                    {
+                        string destinoArchivo = Path.Combine(directorioDestino, entry.Key);
+                        
+                        // Verifica si el archivo ya existe en el directorio de destino
+                        if (File.Exists(destinoArchivo))
+                        {
+                            Console.WriteLine($"El archivo {entry.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
+                            var respuesta = Console.ReadLine();
+                            if (respuesta.Trim().ToUpper() == "N")
+                                continue; // Ignorar el archivo existente
+                        }
+                        
+                        entry.WriteTo(destinoArchivo, new ExtractionOptions
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true // Permite reemplazar archivos existentes
+                        });
+                        
+                        Console.WriteLine($"Archivo descomprimido: {entry.Key}");
+                    }
+                }
+            }
+            
+            Console.WriteLine("Descompresión completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al descomprimir el archivo: {ex.Message}");
+        }
+    }
 }
