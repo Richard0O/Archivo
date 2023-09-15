@@ -801,3 +801,52 @@ class Program
         }
     }
 }Este código copiará una carpeta
+
+
+
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main()
+    {
+        string origenDirectorio = @"C:\Ruta\DirectorioOrigen";
+        string destinoDirectorio = @"C:\Ruta\DirectorioDestino";
+
+        if (!Directory.Exists(origenDirectorio) || !Directory.Exists(destinoDirectorio))
+        {
+            Console.WriteLine("El directorio de origen o destino no existe.");
+            return;
+        }
+
+        string[] archivos = Directory.GetFiles(origenDirectorio);
+
+        foreach (string archivo in archivos)
+        {
+            string nombreArchivo = Path.GetFileName(archivo);
+            string destinoArchivo = Path.Combine(destinoDirectorio, nombreArchivo);
+
+            if (File.Exists(destinoArchivo))
+            {
+                Console.WriteLine($"¿Desea reemplazar '{nombreArchivo}'? (S/N)");
+                string respuesta = Console.ReadLine();
+
+                if (respuesta.Trim().Equals("S", StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Copy(archivo, destinoArchivo, true);
+                    Console.WriteLine($"'{nombreArchivo}' reemplazado.");
+                }
+                else
+                {
+                    Console.WriteLine($"'{nombreArchivo}' no fue reemplazado.");
+                }
+            }
+            else
+            {
+                File.Copy(archivo, destinoArchivo);
+                Console.WriteLine($"'{nombreArchivo}' copiado.");
+            }
+        }
+    }
+}
