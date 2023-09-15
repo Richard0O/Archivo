@@ -530,4 +530,55 @@ class Program
 }
 ```
 
-Este código verifica si el archivo ya existe en el directorio de destino y permite al usuario elegir si desea reemplazarlo o no. Asegúrate de ajustar las rutas y las opciones según tus necesidades específicas. Además, ten en cuenta que debes manejar las excepciones adecuadamente según tus requerimientos de manejo de errores.
+Este código verifica
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            string archivoRar = "archivo.rar";
+            string directorioDestino = "directorioDestino";
+
+            using (var archivo = ArchiveFactory.Open(archivoRar))
+            {
+                foreach (var entrada in archivo.Entries)
+                {
+                    if (!entrada.IsDirectory)
+                    {
+                        // Si deseas reemplazar archivos existentes, descomenta la siguiente línea
+                        // entrada.WriteToDirectory(directorioDestino, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+
+                        // Si deseas preguntar antes de reemplazar, puedes usar el siguiente código
+                        string rutaArchivoDestino = Path.Combine(directorioDestino, entrada.Key);
+                        if (File.Exists(rutaArchivoDestino))
+                        {
+                            Console.WriteLine($"El archivo {entrada.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
+                            string respuesta = Console.ReadLine();
+                            if (respuesta.Trim().ToUpper() == "S")
+                            {
+                                entrada.WriteToDirectory(directorioDestino, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                            }
+                        }
+                        else
+                        {
+                            entrada.WriteToDirectory(directorioDestino, new ExtractionOptions() { ExtractFullPath = true, Overwrite = false });
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión completada.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
