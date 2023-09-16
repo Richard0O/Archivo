@@ -910,3 +910,75 @@ class Program
         }
     }
 }
+
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string zipFilePath = "ruta_del_archivo.zip"; // Ruta del archivo ZIP
+        string extractPath = "ruta_de_destino"; // Ruta donde deseas extraer los archivos
+
+        using (var archive = ArchiveFactory.Open(zipFilePath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                // Construye la ruta completa para el archivo o carpeta a extraer
+                string entryPath = Path.Combine(extractPath, entry.Key);
+
+                if (entry.IsDirectory)
+                {
+                    // Si es una carpeta, asegúrate de que exista o pregúntale al usuario si debe reemplazarse
+                    if (Directory.Exists(entryPath))
+                    {
+                        Console.WriteLine($"La carpeta ya existe: {entryPath}");
+                        Console.Write("¿Desea reemplazarla? (S/N): ");
+                        var response = Console.ReadLine();
+
+                        if (response.Trim().ToUpper() == "S")
+                        {
+                            Directory.Delete(entryPath, true); // Elimina la carpeta existente y su contenido
+                            Directory.CreateDirectory(entryPath); // Crea una nueva carpeta
+                        }
+                        else
+                        {
+                            continue; // Salta esta entrada si el usuario no desea reemplazarla
+                        }
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(entryPath); // Crea la carpeta si no existe
+                    }
+                }
+                else
+                {
+                    // Si es un archivo, asegúrate de que exista o pregúntale al usuario si debe reemplazarse
+                    if (File.Exists(entryPath))
+                    {
+                        Console.WriteLine($"El archivo ya existe: {entryPath}");
+                        Console.Write("¿Desea reemplazarlo? (S/N): ");
+                        var response = Console.ReadLine();
+
+                        if (response.Trim().ToUpper() != "S")
+                        {
+                            continue; // Salta esta entrada si el usuario no desea reemplazarla
+                        }
+                    }
+
+                    entry.WriteToDirectory(extractPath, new ExtractionOptions
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+            }
+        }
+
+        Console.WriteLine("La descompresión se ha completado con éxito.");
+    }
+}
