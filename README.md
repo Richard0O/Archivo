@@ -1010,3 +1010,30 @@ Comprimir un archivo en formato ZIP:using (var archive = ZipArchive.Create())
     archive.AddEntry("archivo.txt", "Contenido del archivo");
     archive.Save("archivo.rar");
 }
+
+
+using (Stream stream = File.OpenRead("ruta_del_archivo.rar"))
+{
+    var reader = ReaderFactory.Open(stream);
+
+    while (reader.MoveToNextEntry())
+    {
+        if (!reader.Entry.IsDirectory)
+        {
+            if (reader.Entry.IsEncrypted)
+            {
+                // Establece la contraseña
+                reader.Entry.Password = "tu_contraseña";
+            }
+
+            // Especifica la ruta donde deseas extraer el archivo
+            string outputPath = Path.Combine("ruta_de_destino", reader.Entry.Key);
+
+            // Asegúrate de que el directorio de destino exista
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+
+            // Extrae el archivo
+            reader.WriteEntryTo(outputPath, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+        }
+    }
+}
