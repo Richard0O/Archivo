@@ -982,3 +982,31 @@ class Program
         Console.WriteLine("La descompresión se ha completado con éxito.");
     }
 }
+
+B:bbbbbbbbbb
+
+Comprimir un archivo en formato ZIP:using (var archive = ZipArchive.Create())
+{
+    archive.AddEntry("archivo.txt", "Contenido del archivo");
+    archive.Save("archivo.zip");
+}Comprimir una carpeta en formato ZIP:using (var archive = ZipArchive.Create())
+{
+    archive.AddAllFromDirectory("ruta_carpeta");
+    archive.Save("carpeta.zip");
+}Comprimir varias carpetas en un archivo ZIP:using (var archive = ZipArchive.Create())
+{
+    archive.AddAllFromDirectory("ruta_carpeta1");
+    archive.AddAllFromDirectory("ruta_carpeta2");
+    archive.Save("varias_carpetas.zip");
+}Comprimir una carpeta y establecer una contraseña en el archivo ZIP:using (var archive = ZipArchive.Create())
+{
+    archive.AddAllFromDirectory("ruta_carpeta");
+    archive.SaveTo("carpeta_con_contraseña.zip", new WriterOptions(CompressionType.Deflate)
+    {
+        Password = "tu_contraseña"
+    });
+}Comprimir un archivo en formato RAR:using (var archive = RarArchive.Create())
+{
+    archive.AddEntry("archivo.txt", "Contenido del archivo");
+    archive.Save("archivo.rar");
+}
