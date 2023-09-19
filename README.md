@@ -157,3 +157,47 @@ class Program
         }
     }
 }
+
+Ttttttt
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+public void DescomprimirArchivo(string archivoRAR, string destino)
+{
+    using (var archive = ArchiveFactory.Open(archivoRAR))
+    {
+        foreach (var entry in archive.Entries)
+        {
+            if (!entry.IsDirectory)
+            {
+                string destinoArchivo = Path.Combine(destino, entry.Key);
+
+                if (File.Exists(destinoArchivo))
+                {
+                    Console.WriteLine($"El archivo {entry.Key} ya existe. ¿Deseas reemplazarlo? (S/N)");
+                    var respuesta = Console.ReadLine();
+                    
+                    if (respuesta.ToUpper() == "S")
+                    {
+                        entry.WriteTo(destinoArchivo, new ExtractionOptions()
+                        {
+                            ExtractFullPath = true,
+                            Overwrite = true
+                        });
+                    }
+                }
+                else
+                {
+                    entry.WriteTo(destinoArchivo, new ExtractionOptions()
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+            }
+        }
+    }
+}
