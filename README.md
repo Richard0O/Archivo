@@ -199,5 +199,34 @@ public void DescomprimirArchivo(string archivoRAR, string destino)
                 }
             }
         }
+    }ñññ
+
+
+using (var archive = ArchiveFactory.Open("archivo.rar"))
+{
+    foreach (var entry in archive.Entries)
+    {
+        if (!entry.IsDirectory)
+        {
+            // Verifica si el archivo ya existe en la ubicación actual
+            if (File.Exists(entry.Key))
+            {
+                // Si el archivo existe, puedes optar por sobrescribirlo o tomar otra acción
+                // En este ejemplo, sobrescribiremos el archivo existente
+                entry.WriteTo(entry.Key, new ExtractionOptions()
+                {
+                    ExtractFullPath = true,
+                    Overwrite = true // Esto permite sobrescribir archivos existentes
+                });
+            }
+            else
+            {
+                // Si el archivo no existe, simplemente extráelo
+                entry.WriteTo(entry.Key, new ExtractionOptions()
+                {
+                    ExtractFullPath = true
+                });
+            }
+        }
     }
 }
