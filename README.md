@@ -229,4 +229,43 @@ using (var archive = ArchiveFactory.Open("archivo.rar"))
             }
         }
     }
+
+////
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string rarFilePath = "tu_archivo.rar"; // Reemplaza con la ubicación de tu archivo RAR
+        string extractPath = "ruta_de_extracción"; // Reemplaza con la carpeta donde quieres extraer los archivos
+
+        using (var archive = ArchiveFactory.Open(rarFilePath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    string destinationPath = Path.Combine(extractPath, entry.Key);
+                    
+                    if (File.Exists(destinationPath))
+                    {
+                        // Puedes agregar lógica aquí para manejar la sobrescritura si es necesario
+                        Console.WriteLine($"El archivo {entry.Key} ya existe. Sobrescribiendo...");
+                        entry.WriteTo(destinationPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                    }
+                    else
+                    {
+                        entry.WriteTo(destinationPath, new ExtractionOptions() { ExtractFullPath = true, Overwrite = false });
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("Extracción completa.");
+    }
 }
