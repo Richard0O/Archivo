@@ -28,3 +28,25 @@ class Program
         Console.WriteLine("Descompresión completada.");
     }
 }
+
+////////
+
+string archivoRar = "ruta/del/archivo.rar";
+string carpetaDestino = Path.GetDirectoryName(archivoRar); // Obtiene la carpeta donde se encuentra el archivo RAR
+
+using (var archivo = RarArchive.Open(archivoRar))
+{
+    foreach (var entrada in archivo.Entries)
+    {
+        if (!entrada.IsDirectory)
+        {
+            entrada.WriteToDirectory(carpetaDestino, new ExtractionOptions()
+            {
+                ExtractFullPath = true,
+                Overwrite = true
+            });
+        }
+    }
+}
+
+Console.WriteLine("Archivo RAR descomprimido con éxito.");
