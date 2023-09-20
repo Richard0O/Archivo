@@ -326,3 +326,59 @@ class Program
         Console.WriteLine("Archivo comprimido con éxito.");
     }
 }
+
+
+Aaasassssa
+
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        // Specify the path to the WinRAR executable
+        string winRarPath = @"C:\Program Files\WinRAR\WinRAR.exe";
+
+        // Specify the source folder you want to compress
+        string sourceFolder = @"C:\Path\To\Your\Folder";
+
+        // Specify the destination archive file (including .rar extension)
+        string destinationArchive = @"C:\Path\To\Your\Archive.rar";
+
+        // Create a ProcessStartInfo object to configure the process
+        ProcessStartInfo processInfo = new ProcessStartInfo
+        {
+            FileName = winRarPath,
+            Arguments = $"a \"{destinationArchive}\" \"{sourceFolder}\"", // 'a' stands for 'add to archive'
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        // Create and start the process
+        Process process = new Process
+        {
+            StartInfo = processInfo
+        };
+
+        process.Start();
+
+        // Wait for the process to exit
+        process.WaitForExit();
+
+        // Check if the process exited successfully (ExitCode 0)
+        if (process.ExitCode == 0)
+        {
+            Console.WriteLine("Compression successful.");
+        }
+        else
+        {
+            Console.WriteLine("Compression failed. Check for errors.");
+        }
+
+        // Close the process
+        process.Close();
+    }
+}
