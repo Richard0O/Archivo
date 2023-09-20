@@ -298,3 +298,31 @@ using (Stream stream = File.OpenRead(rutaArchivoRar))
         }
     }
 }
+
+Ggggvv
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Compressors;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoAComprimir = "archivo.txt";
+        string archivoComprimido = "archivo.rar";
+        string contraseña = "tu_contraseña";
+
+        using (var stream = File.OpenWrite(archivoComprimido))
+        using (var writer = WriterFactory.Open(stream, ArchiveType.Rar, CompressionType.Deflate, new WriterOptions(CompressionType.Deflate)
+        {
+            Password = contraseña // Aquí estableces la contraseña
+        }))
+        {
+            writer.Write(archivoAComprimir, Path.GetFileName(archivoAComprimir));
+        }
+
+        Console.WriteLine("Archivo comprimido con éxito.");
+    }
+}
