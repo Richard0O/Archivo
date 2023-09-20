@@ -269,3 +269,32 @@ class Program
         Console.WriteLine("Extracción completa.");
     }
 }
+
+Vvvvvv
+string rutaArchivoRar = "ruta/del/archivo.rar";
+string carpetaDestino = "ruta/de/la/carpeta/destino/";
+
+using (Stream stream = File.OpenRead(rutaArchivoRar))
+{
+    using (var reader = ReaderFactory.Open(stream))
+    {
+        foreach (var entry in reader.Entries)
+        {
+            if (!entry.IsDirectory)
+            {
+                // Obtener el nombre del archivo del entry
+                string nombreArchivo = Path.GetFileName(entry.Key);
+
+                // Construir la ruta completa de destino con el mismo nombre
+                string rutaDestino = Path.Combine(carpetaDestino, nombreArchivo);
+
+                // Extraer el archivo en la carpeta de destino
+                entry.WriteToDirectory(carpetaDestino, new ExtractionOptions()
+                {
+                    ExtractFullPath = true,
+                    Overwrite = true // Puedes cambiar esto según tus necesidades
+                });
+            }
+        }
+    }
+}
