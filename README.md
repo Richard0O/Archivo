@@ -397,3 +397,34 @@ using (var archivoSalida = File.OpenWrite(archivoDestino))
         escritor.WriteAll(archivoOrigen, "carpetaDentroDelRAR");
     }
 }
+Jjjjjj
+
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        string winRarPath = @"C:\Program Files\WinRAR\WinRAR.exe"; // Ruta de WinRAR en tu sistema
+        string archivoComprimido = @"C:\ruta\archivo.rar"; // Ruta del archivo comprimido
+        string destinoDescomprimido = @"C:\ruta\destino"; // Carpeta de destino para la descompresión
+
+        DescomprimirConWinRAR(winRarPath, archivoComprimido, destinoDescomprimido);
+    }
+
+    static void DescomprimirConWinRAR(string winRarPath, string archivoComprimido, string destinoDescomprimido)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = winRarPath;
+        startInfo.Arguments = $"x \"{archivoComprimido}\" \"{destinoDescomprimido}\""; // Argumentos para descomprimir
+
+        Process process = new Process();
+        process.StartInfo = startInfo;
+        process.Start();
+
+        process.WaitForExit(); // Esperar a que termine el proceso de descompresión
+
+        Console.WriteLine("Descompresión completada.");
+    }
+}
