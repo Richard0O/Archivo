@@ -504,3 +504,34 @@ class Program
         Console.WriteLine("Carpeta comprimida en archivo ZIP con contraseña.");
     }
 }
+
+
+
+Tttt
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Compressors.Deflate;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string archivoOrigen = "archivo.txt";
+        string archivoDestino = "archivo_comprimido.zip";
+        string contraseña = "tu_contraseña";
+
+        using (var stream = new FileStream(archivoOrigen, FileMode.Open))
+        using (var archiveStream = new FileStream(archivoDestino, FileMode.Create))
+        using (var writer = WriterFactory.Open(archiveStream, ArchiveType.Zip, CompressionType.Deflate, new WriterOptions(CompressionType.Deflate)
+        {
+            Password = contraseña // Aquí estableces la contraseña
+        }))
+        {
+            writer.Write("archivo.txt", stream); // Agrega el archivo al archivo ZIP
+        }
+
+        Console.WriteLine("Archivo comprimido con éxito.");
+    }
+}
