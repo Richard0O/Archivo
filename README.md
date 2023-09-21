@@ -428,3 +428,33 @@ class Program
         Console.WriteLine("Descompresión completada.");
     }
 }
+ññññ
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoAComprimir = "archivo.txt";
+        string rutaDestino = "archivo_comprimido.zip";
+        string contraseña = "tu_contraseña";
+
+        if (File.Exists(archivoAComprimir) && Directory.Exists(Path.GetDirectoryName(rutaDestino)))
+        {
+            using (var stream = new FileStream(rutaDestino, FileMode.Create))
+            using (var writer = WriterFactory.Open(stream, ArchiveType.Zip, CompressionType.Deflate, new WriterOptions(CompressionType.Deflate) { ArchiveEncoding = new ArchiveEncoding() { UseUnicode = true }, Password = contraseña }))
+            {
+                writer.Write(Path.GetFileName(archivoAComprimir), archivoAComprimir);
+            }
+
+            Console.WriteLine("Archivo comprimido exitosamente.");
+        }
+        else
+        {
+            Console.WriteLine("El archivo o la ruta no existen.");
+        }
+    }
+}
