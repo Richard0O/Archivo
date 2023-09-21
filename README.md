@@ -535,3 +535,43 @@ class Program
         Console.WriteLine("Archivo comprimido con éxito.");
     }
 }
+
+Ffffff
+
+using System;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string zipFilePath = "ruta_del_archivo.zip"; // Reemplaza con la ruta de tu archivo ZIP
+        string extractPath = "ruta_de_la_carpeta_destino"; // Reemplaza con la carpeta donde deseas extraer los archivos
+
+        using (var archive = ArchiveFactory.Open(zipFilePath))
+        {
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            {
+                // Utiliza el nombre del archivo ZIP como base para la extracción
+                string destinationFileName = Path.Combine(extractPath, entry.Key);
+
+                // Asegúrate de que el directorio destino exista
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationFileName));
+
+                // Extrae el archivo
+                entry.WriteTo(destinationFileName, new ExtractionOptions()
+                {
+                    ExtractFullPath = true, // Mantén la estructura de carpetas original
+                    Overwrite = true // Si ya existe, sobrescribe el archivo
+                });
+
+                Console.WriteLine($"Extrayendo: {entry.Key}");
+            }
+        }
+
+        Console.WriteLine("Extracción completada.");
+    }
+}
