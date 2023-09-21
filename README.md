@@ -458,3 +458,49 @@ class Program
         }
     }
 }
+
+
+Rrrrr
+
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+using SharpCompress.Writers.Zip;
+
+class Program
+{
+    static void Main()
+    {
+        string carpetaOrigen = @"C:\Ruta\A\Tus\Carpetas"; // Reemplaza con la ruta de tus carpetas
+        string archivoZip = @"C:\Ruta\Donde\Guardar\archivo.zip"; // Reemplaza con la ruta donde deseas guardar el archivo ZIP
+        string contraseña = "tu_contraseña"; // Reemplaza con la contraseña deseada
+
+        // Verifica si la carpeta de origen existe
+        if (!Directory.Exists(carpetaOrigen))
+        {
+            Console.WriteLine("La carpeta de origen no existe.");
+            return;
+        }
+
+        // Verifica si el archivo ZIP ya existe
+        if (File.Exists(archivoZip))
+        {
+            Console.WriteLine("El archivo ZIP ya existe. No se puede sobrescribir.");
+            return;
+        }
+
+        // Comprime las carpetas en un archivo ZIP con contraseña
+        using (var stream = File.OpenWrite(archivoZip))
+        using (var writer = WriterFactory.Open(stream, ArchiveType.Zip, new WriterOptions(CompressionType.Deflate)
+        {
+            ArchiveEncoding = new ArchiveEncoding { EntryEncoding = Encoding.UTF8 }, // Opcional: establece la codificación
+            Password = contraseña // Establece la contraseña
+        }))
+        {
+            writer.WriteAll(carpetaOrigen, "*", SearchOption.AllDirectories);
+        }
+
+        Console.WriteLine("Carpeta comprimida en archivo ZIP con contraseña.");
+    }
+}
