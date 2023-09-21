@@ -382,3 +382,18 @@ class Program
         process.Close();
     }
 }
+
+Tttt
+
+string archivoOrigen = "archivo.txt"; // Reemplaza con la ruta de tu archivo de origen
+string archivoDestino = "archivo.rar"; // Nombre del archivo RAR resultante
+string contraseña = "miContraseña"; // Reemplaza con tu contraseña
+
+// Crear un archivo RAR con contraseña
+using (var archivoSalida = File.OpenWrite(archivoDestino))
+{
+    using (var escritor = WriterFactory.Open(archivoSalida, ArchiveType.Rar, new WriterOptions(CompressionType.Rar, new SharpCompress.Common.CompressionInfo() { Password = contraseña })))
+    {
+        escritor.WriteAll(archivoOrigen, "carpetaDentroDelRAR");
+    }
+}
