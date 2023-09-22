@@ -101,3 +101,42 @@ class Program
         Console.WriteLine("Archivos comprimidos con éxito.");
     }
 }
+
+Hhhhhh
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta del archivo RAR de salida
+        string outputPath = "archivo_comprimido.rar";
+
+        // Crear una lista de archivos que deseas comprimir
+        List<string> filesToCompress = new List<string>
+        {
+            "archivo1.txt",
+            "archivo2.txt",
+            // Agrega más archivos si es necesario
+        };
+
+        // Comprimir los archivos en un archivo RAR
+        using (Stream stream = File.OpenWrite(outputPath))
+        {
+            using (var archive = ArchiveFactory.Create(ArchiveType.Rar, stream))
+            {
+                foreach (var file in filesToCompress)
+                {
+                    archive.AddEntry(file, File.OpenRead(file), true);
+                }
+            }
+        }
+
+        Console.WriteLine("Archivos comprimidos con éxito.");
+    }
+}
