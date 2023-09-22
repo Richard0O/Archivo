@@ -63,3 +63,41 @@ class Program
         Console.WriteLine("Archivo comprimido y protegido con contraseña.");
     }
 }
+
+
+] yyyyyyyyy
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoRar = "archivo.rar";
+        string directorioArchivos = "archivos_a_comprimir";
+        string contraseña = "tu_contraseña";
+
+        using (var archive = ArchiveFactory.Open(archivoRar, Options.KeepStreamsOpen))
+        {
+            foreach (var archivo in Directory.EnumerateFiles(directorioArchivos))
+            {
+                var entry = archive.AddEntry(Path.GetFileName(archivo));
+
+                // Establecer la contraseña
+                entry.Password = contraseña;
+
+                using (var streamWriter = new StreamWriter(entry.OpenEntryStream()))
+                using (var fileStream = File.OpenRead(archivo))
+                {
+                    fileStream.CopyTo(streamWriter.BaseStream);
+                }
+            }
+        }
+
+        Console.WriteLine("Archivos comprimidos con éxito.");
+    }
+}
