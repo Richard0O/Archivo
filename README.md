@@ -33,3 +33,33 @@ string archivoRar = "ArchivoRar.rar"; // Reemplaza esto con la ruta de tu archiv
         }
 
         Console.WriteLine("Archivo RAR extraído y carpeta de destino renombrada con éxito.");
+
+
+
+Hhhhh
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoAComprimir = "archivo.txt"; // Cambia esto al nombre de tu archivo
+        string archivoComprimido = "archivo.rar"; // Nombre del archivo comprimido
+        string contraseña = "mi_contraseña"; // Cambia esto a tu contraseña
+
+        using (Stream stream = new FileStream(archivoComprimido, FileMode.Create))
+        {
+            using (var writer = WriterFactory.Open(stream, ArchiveType.Rar, new WriterOptions(CompressionType.Rar, new RarWriterOptions { Password = contraseña })))
+            {
+                writer.Write(archivoAComprimir, Path.GetFileName(archivoAComprimir));
+            }
+        }
+
+        Console.WriteLine("Archivo comprimido y protegido con contraseña.");
+    }
+}
