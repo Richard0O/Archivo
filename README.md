@@ -178,3 +178,41 @@ class Program
         Console.WriteLine("Carpeta comprimida con éxito en un archivo RAR.");
     }
 }
+
+
+Bbbnb
+
+public static void ComprimirCarpetasAUnRAR(string[] carpetasParaComprimir, string archivoDestino)
+{
+    using (var archive = ArchiveFactory.Create(ArchiveType.Rar, archivoDestino, CompressionType.BZip2))
+    {
+        foreach (var carpeta in carpetasParaComprimir)
+        {
+            if (Directory.Exists(carpeta))
+            {
+                var archivos = Directory.GetFiles(carpeta, "*", SearchOption.AllDirectories);
+
+                foreach (var archivo in archivos)
+                {
+                    var entrada = archive.AddEntry(Path.GetRelativePath(carpeta, archivo), archivo);
+                    entrada.WriteTo(archive);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"La carpeta {carpeta} no existe.");
+            }
+        }
+    }
+}Llama a esta función pasando un array de las carpetas que deseas comprimir y el nombre del archivo RAR de destino:static void Main()
+{
+    string[] carpetasParaComprimir = new string[]
+    {
+        @"C:\Ruta\A\La\Primera\Carpeta",
+        @"C:\Ruta\A\La\Segunda\Carpeta"
+    };
+
+    string archivoDestino = @"C:\Ruta\Del\Archivo.rar";
+
+    ComprimirCarpetasAUnRAR(carpetasParaComprimir, archivoDestino);
+}
