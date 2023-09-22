@@ -140,3 +140,41 @@ class Program
         Console.WriteLine("Archivos comprimidos con éxito.");
     }
 }
+
+
+44444
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta de la carpeta que deseas comprimir
+        string carpetaAComprimir = @"C:\Ruta\De\Tu\Carpeta";
+
+        // Nombre y ubicación del archivo RAR resultante
+        string archivoRar = @"C:\Ruta\De\Tu\Archivo.rar";
+
+        // Crear un archivo RAR
+        using (var archive = ArchiveFactory.Create(ArchiveType.Rar, archivoRar))
+        {
+            // Agregar todos los archivos y carpetas de la carpeta a comprimir
+            foreach (var archivo in Directory.EnumerateFiles(carpetaAComprimir, "*", SearchOption.AllDirectories))
+            {
+                var archivoEntry = archive.CreateEntry(Path.GetRelativePath(carpetaAComprimir, archivo), CompressionType.Default);
+
+                using (var streamWriter = archivoEntry.OpenEntryStreamWriter())
+                using (var archivoStream = File.OpenRead(archivo))
+                {
+                    archivoStream.CopyTo(streamWriter.BaseStream);
+                }
+            }
+        }
+
+        Console.WriteLine("Carpeta comprimida con éxito en un archivo RAR.");
+    }
+}
