@@ -84,3 +84,55 @@ class Program
 }
 ////////////////////////////////////////////////7
 
+Comprimir listas
+public static void ComprimirCarpetasEnZip(List<string> carpetas, string archivoZip)
+{
+    // Crea un nuevo archivo ZIP
+    using (var archivo = ZipArchive.Create())
+    {
+        // Configura las opciones de compresión
+        var opciones = new WriterOptions(CompressionType.Deflate);
+        
+        foreach (var carpeta in carpetas)
+        {
+            if (Directory.Exists(carpeta))
+            {
+                // Agrega los archivos de la carpeta al archivo ZIP
+                foreach (var archivoCarpeta in Directory.GetFiles(carpeta, "*", SearchOption.AllDirectories))
+                {
+                    var entrada = archivo.AddEntry(Path.GetRelativePath(carpeta, archivoCarpeta), archivoCarpeta, opciones);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"La carpeta '{carpeta}' no existe.");
+            }
+        }
+
+        // Guarda el archivo ZIP en disco
+        using (var stream = new FileStream(archivoZip, FileMode.Create))
+        {
+            archivo.SaveTo(stream, CompressionType.Deflate);
+        }
+    }
+}
+
+public static void Main(string[] args)
+{
+    List<string> carpetas = new List<string>
+    {
+        "ruta/carpeta1",
+        "ruta/carpeta2",
+        // Agrega más carpetas según sea necesario
+    };
+
+    string archivoZip = "ruta/archivo.zip";
+
+    ComprimirCarpetasEnZip(carpetas, archivoZip);
+
+    Console.WriteLine("Las carpetas se han comprimido en el archivo ZIP.");
+}
+////////////////////////////////////////////////
+
+
+
