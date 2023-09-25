@@ -49,11 +49,9 @@ class Program
 {
     static void Main()
     {
-        Console.Write("Ruta de la carpeta a comprimir: ");
-        string carpetaOrigen = Console.ReadLine();
+        string carpetaOrigen = @"C:\Users\ricky\Desktop\ArchivosTest\ArchivoComprimir";
 
-        Console.Write("Nombre del archivo ZIP de destino (dejar en blanco para usar el nombre de la carpeta): ");
-        string nombreArchivoDestino = Console.ReadLine();
+        string nombreArchivoDestino = "";
 
         // Comprobar si el usuario proporcionó un nombre de archivo ZIP, de lo contrario, usar el nombre de la carpeta
         if (string.IsNullOrWhiteSpace(nombreArchivoDestino))
