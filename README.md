@@ -135,4 +135,53 @@ public static void Main(string[] args)
 ////////////////////////////////////////////////
 
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        // Lista de rutas de las carpetas que deseas comprimir
+        List<string> carpetas = new List<string>
+        {
+            @"C:\Ruta\A\",
+            @"C:\Ruta\B\"
+        };
+
+        // Ruta del archivo ZIP de salida
+        string archivoZipSalida = @"C:\Ruta\archivo.zip";
+
+        using (var stream = new FileStream(archivoZipSalida, FileMode.Create))
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip, stream))
+        {
+            foreach (var carpeta in carpetas)
+            {
+                // Agrega cada archivo y carpeta de la ruta especificada al archivo ZIP
+                foreach (var archivoOcarpeta in Directory.EnumerateFileSystemEntries(carpeta, "*", SearchOption.AllDirectories))
+                {
+                    string relativaPath = Path.GetRelativePath(carpeta, archivoOcarpeta);
+
+                    if (File.Exists(archivoOcarpeta))
+                    {
+                        // Agrega archivo al ZIP
+                        archive.AddEntry(relativaPath, File.ReadAllBytes(archivoOcarpeta));
+                    }
+                    else if (Directory.Exists(archivoOcarpeta))
+                    {
+                        // Agrega carpeta al ZIP
+                        archive.AddEntry(relativaPath + Path.DirectorySeparatorChar, new byte[0]);
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("Compresión completada.");
+    }
+}
+
 
