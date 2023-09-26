@@ -182,6 +182,55 @@ class Program
 
         Console.WriteLine("Compresión completada.");
     }
-}
 
+/////////////////
+
+
+using System;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta del archivo que deseas comprimir
+        string archivoAComprimir = @"C:\Ruta\Archivo.txt";
+
+        // Ruta de destino o deja en blanco para usar el nombre del archivo comprimido
+        string rutaDeDestino = "";
+
+        // Comprime el archivo
+        ComprimirArchivo(archivoAComprimir, rutaDeDestino);
+    }
+
+    static void ComprimirArchivo(string archivoAComprimir, string rutaDeDestino)
+    {
+        // Obtiene el nombre del archivo sin la extensión
+        string nombreArchivo = Path.GetFileNameWithoutExtension(archivoAComprimir);
+
+        // Si la ruta de destino está en blanco, utiliza el nombre del archivo
+        if (string.IsNullOrWhiteSpace(rutaDeDestino))
+        {
+            rutaDeDestino = nombreArchivo + ".zip";
+        }
+        else
+        {
+            // Combina la ruta de destino con el nombre del archivo
+            rutaDeDestino = Path.Combine(rutaDeDestino, nombreArchivo + ".zip");
+        }
+
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+        {
+            // Agrega el archivo al archivo comprimido con la estructura de carpetas
+            archive.AddEntry(nombreArchivo + Path.GetExtension(archivoAComprimir),
+                File.OpenRead(archivoAComprimir), false);
+            archive.SaveTo(rutaDeDestino, CompressionType.Deflate);
+        }
+
+        Console.WriteLine("Archivo comprimido en: " + rutaDeDestino);
+    }
+}
 
