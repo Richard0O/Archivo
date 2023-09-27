@@ -184,3 +184,54 @@ class Program
 }
 ////////////////////////////////////////////
 
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main()
+    {
+        // Lista de rutas de carpetas que deseas comprimir
+        List<string> carpetasAComprimir = new List<string>
+        {
+            @"C:\Ruta\A\Carpetas\Carpetas1",
+            @"C:\Ruta\A\Carpetas\Carpetas2",
+            // Agrega más rutas de carpetas según sea necesario
+        };
+
+        // Ruta del archivo ZIP de salida
+        string archivoZipSalida = @"C:\Ruta\Salida\archivo.zip";
+
+        // Comprimir las carpetas en el archivo ZIP
+        //ComprimirCarpetasEnZip(carpetasAComprimir, archivoZipSalida);
+
+
+        using (Stream stream = File.OpenWrite(archivoZipSalida))
+        {
+            var writer = WriterFactory.Open(stream, ArchiveType.Zip, new WriterOptions(CompressionType.Deflate));
+
+            foreach (string carpeta in carpetasAComprimir)
+            {
+                // Asegúrate de que la carpeta exista
+                if (Directory.Exists(carpeta))
+                {
+                    var carpetaInfo = new DirectoryInfo(carpeta);
+                    writer.Write(carpetaInfo, carpetaInfo.Name);
+                }
+                else
+                {
+                    Console.WriteLine($"La carpeta '{carpeta}' no existe y no se puede comprimir.");
+                }
+            }
+
+            writer.Dispose();
+        }
+    }
+}
+
+///////////////////////////////////////////////
