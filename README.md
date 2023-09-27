@@ -270,3 +270,40 @@ class Program
         Console.WriteLine("Carpeta comprimida exitosamente.");
     }
 }
+
+/////////////:
+
+using System;
+using System.IO;
+using System.IO.Compression;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta de la carpeta que deseas comprimir
+        string carpetaOrigen = @"C:\Ruta\De\Tu\Carpeta";
+
+        // Nombre del archivo ZIP resultante
+        string archivoZip = @"C:\Ruta\De\Tu\Archivo.zip";
+
+        // Crear una lista de archivos dentro de la carpeta
+        var archivos = Directory.GetFiles(carpetaOrigen);
+
+        // Comprimir los archivos en un archivo ZIP
+        using (FileStream fs = new FileStream(archivoZip, FileMode.Create))
+        {
+            using (ZipArchive zipArchive = new ZipArchive(fs, ZipArchiveMode.Create))
+            {
+                foreach (string archivo in archivos)
+                {
+                    // Agregar cada archivo a la entrada del archivo ZIP
+                    string nombreArchivoEnZip = Path.GetFileName(archivo);
+                    zipArchive.CreateEntryFromFile(archivo, nombreArchivoEnZip);
+                }
+            }
+        }
+
+        Console.WriteLine("La carpeta se ha comprimido en un archivo ZIP.");
+    }
+}
