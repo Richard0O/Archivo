@@ -133,104 +133,54 @@ public static void Main(string[] args)
     Console.WriteLine("Las carpetas se han comprimido en el archivo ZIP.");
 }
 ////////////////////////////////////////////////
-
-
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using SharpCompress.Writers;
 
 class Program
 {
     static void Main()
     {
-        // Lista de rutas de las carpetas que deseas comprimir
-        List<string> carpetas = new List<string>
-        {
-            @"C:\Ruta\A\",
-            @"C:\Ruta\B\"
-        };
+        // Ruta del archivo ZIP a crear
+        string zipFilePath = "archivo.zip";
 
-        // Ruta del archivo ZIP de salida
-        string archivoZipSalida = @"C:\Ruta\archivo.zip";
+        // Contraseña para el archivo ZIP
+        string password = "tucontraseña";
 
-        using (var stream = new FileStream(archivoZipSalida, FileMode.Create))
-        using (var archive = ArchiveFactory.Create(ArchiveType.Zip, stream))
+        // Ruta de los archivos que deseas agregar al ZIP
+        string[] filesToAdd = { "archivo1.txt", "archivo2.txt" };
+
+        // Crear un archivo ZIP con contraseña
+        using (var archiveStream = File.Create(zipFilePath))
         {
-            foreach (var carpeta in carpetas)
+            // Crear un archivo ZIP protegido con contraseña
+            using (var archive = WriterFactory.Open(archiveStream, ArchiveType.Zip, CompressionType.Deflate, new WriterOptions(CompressionType.Deflate) 
+            { Password = password }))
             {
-                // Agrega cada archivo y carpeta de la ruta especificada al archivo ZIP
-                foreach (var archivoOcarpeta in Directory.EnumerateFileSystemEntries(carpeta, "*", SearchOption.AllDirectories))
+                foreach (var file in filesToAdd)
                 {
-                    string relativaPath = Path.GetRelativePath(carpeta, archivoOcarpeta);
+                    // Agregar cada archivo a la entrada del archivo ZIP
+                    var entry = archive.AddEntry(file, Path.GetDirectoryName(file));
 
-                    if (File.Exists(archivoOcarpeta))
+                    // Lee el contenido del archivo y escribe en la entrada del archivo ZIP
+                    using (var fileStream = File.OpenRead(file))
                     {
-                        // Agrega archivo al ZIP
-                        archive.AddEntry(relativaPath, File.ReadAllBytes(archivoOcarpeta));
-                    }
-                    else if (Directory.Exists(archivoOcarpeta))
-                    {
-                        // Agrega carpeta al ZIP
-                        archive.AddEntry(relativaPath + Path.DirectorySeparatorChar, new byte[0]);
+                        entry.WriteTo(fileStream);
                     }
                 }
             }
         }
 
-        Console.WriteLine("Compresión completada.");
+        Console.WriteLine("Archivo ZIP con contraseña creado con éxito.");
     }
+}
 
-/////////////////
-
-
-using System;
-using System.IO;
-using System.Linq;
-using SharpCompress.Archives;
-using SharpCompress.Common;
-
-class Program
-{
-    static void Main()
-    {
-        // Ruta del archivo que deseas comprimir
-        string archivoAComprimir = @"C:\Ruta\Archivo.txt";
-
-        // Ruta de destino o deja en blanco para usar el nombre del archivo comprimido
-        string rutaDeDestino = "";
-
-        // Comprime el archivo
-        ComprimirArchivo(archivoAComprimir, rutaDeDestino);
-    }
-
-    static void ComprimirArchivo(string archivoAComprimir, string rutaDeDestino)
-    {
-        // Obtiene el nombre del archivo sin la extensión
-        string nombreArchivo = Path.GetFileNameWithoutExtension(archivoAComprimir);
-
-        // Si la ruta de destino está en blanco, utiliza el nombre del archivo
-        if (string.IsNullOrWhiteSpace(rutaDeDestino))
-        {
-            rutaDeDestino = nombreArchivo + ".zip";
-        }
-        else
-        {
-            // Combina la ruta de destino con el nombre del archivo
-            rutaDeDestino = Path.Combine(rutaDeDestino, nombreArchivo + ".zip");
-        }
-
-        using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
-        {
-            // Agrega el archivo al archivo comprimido con la estructura de carpetas
-            archive.AddEntry(nombreArchivo + Path.GetExtension(archivoAComprimir),
-                File.OpenRead(archivoAComprimir), false);
-            archive.SaveTo(rutaDeDestino, CompressionType.Deflate);
-        }
 
         Console.WriteLine("Archivo comprimido en: " + rutaDeDestino);
     }
 }
+////////////////////////////////////////////
 
