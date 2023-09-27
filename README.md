@@ -235,3 +235,38 @@ class Program
 }
 
 ///////////////////////////////////////////////
+
+using System;
+using System.IO;
+using System.Linq;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string carpetaOrigen = @"C:\Ruta\De\La\Carpeta";
+        string archivoDestino = @"C:\Ruta\Destino\archivo.zip";
+
+        // Si el usuario no proporciona una ruta de destino, usa el nombre de la carpeta
+        if (string.IsNullOrEmpty(archivoDestino))
+        {
+            archivoDestino = Path.Combine(Path.GetDirectoryName(carpetaOrigen), Path.GetFileName(carpetaOrigen) + ".zip");
+        }
+
+        using (var archive = ArchiveFactory.Create(ArchiveType.Zip, archivoDestino))
+        {
+            var archivos = Directory.GetFiles(carpetaOrigen, "*", SearchOption.AllDirectories);
+
+            foreach (var archivo in archivos)
+            {
+                var entradaRelativa = Path.Combine(Path.GetFileName(carpetaOrigen), archivo.Replace(carpetaOrigen, string.Empty).TrimStart('\\'));
+
+                archive.AddEntry(entradaRelativa, archivo);
+            }
+        }
+
+        Console.WriteLine("Carpeta comprimida exitosamente.");
+    }
+}
