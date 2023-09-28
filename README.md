@@ -188,3 +188,40 @@ class Program
         }
     }
 }
+Jjjnn
+
+using SharpCompress.Common;
+using SharpCompress.Archives;
+using SharpCompress.Writers;
+using SharpCompress.Readers;
+
+// Comprimir un archivo con contraseña
+using (var archive = ArchiveFactory.Create(ArchiveType.Zip))
+{
+    archive.AddEntry("archivo.txt", "ruta/al/archivo.txt");
+
+    // Establecer la contraseña
+    archive.SaveTo("archivo_con_contraseña.zip", new WriterOptions(CompressionType.Deflate)
+    {
+        Password = "tu_contraseña_secreta"
+    });
+}
+
+// Descomprimir un archivo con contraseña
+using (var archive = ArchiveFactory.Open("archivo_con_contraseña.zip", new ReaderOptions()
+{
+    Password = "tu_contraseña_secreta"
+}))
+{
+    foreach (var entry in archive.Entries)
+    {
+        if (!entry.IsDirectory)
+        {
+            entry.WriteToDirectory("directorio_de_destino", new ExtractionOptions()
+            {
+                ExtractFullPath = true,
+                Overwrite = true
+            });
+        }
+    }
+}
