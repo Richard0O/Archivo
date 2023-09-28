@@ -148,3 +148,43 @@ class Program
 }
 
 //////////////////////////////////////////////////////////////////////
+using System;
+using System.IO;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta de la carpeta que deseas comprimir
+        string carpetaACoprimir = @"C:\Ruta\De\Tu\Carpeta";
+
+        // Solicitar al usuario la ruta del archivo ZIP o usar el nombre de la carpeta
+        Console.WriteLine("Especifica la ruta del archivo ZIP (deja en blanco para usar el nombre de la carpeta):");
+        string rutaArchivoZip = Console.ReadLine();
+
+        // Si el usuario no especifica una ruta, usa el nombre de la carpeta
+        if (string.IsNullOrWhiteSpace(rutaArchivoZip))
+        {
+            rutaArchivoZip = Path.Combine(
+                Path.GetDirectoryName(carpetaACoprimir),
+                Path.GetFileNameWithoutExtension(carpetaACoprimir) + ".zip"
+            );
+        }
+
+        // Comprime la carpeta en el archivo ZIP
+        ComprimirCarpeta(carpetaACoprimir, rutaArchivoZip);
+
+        Console.WriteLine($"Carpeta comprimida en: {rutaArchivoZip}");
+    }
+
+    static void ComprimirCarpeta(string carpetaOrigen, string archivoDestino)
+    {
+        using (var stream = new FileStream(archivoDestino, FileMode.Create))
+        using (var writer = WriterFactory.Open(stream, ArchiveType.Zip, new WriterOptions(CompressionType.Deflate)))
+        {
+            writer.WriteAll(carpetaOrigen, "*", SearchOption.AllDirectories);
+        }
+    }
+}
