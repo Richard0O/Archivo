@@ -394,3 +394,33 @@ class Program
         }
     }
 }
+
+Hhhhhbbbb
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta de la carpeta que deseas comprimir
+        string sourceFolder = @"C:\Ruta\De\Tu\Carpeta";
+
+        // Ruta y nombre del archivo ZIP de salida
+        string zipFilePath = @"C:\Ruta\De\Tu\Archivo.zip";
+
+        // Configura opciones para controlar la sobrescritura
+        var zipOptions = new ZipOptions();
+        zipOptions.CompressionType = CompressionType.Deflate; // Tipo de compresión (puedes ajustarlo según tus necesidades)
+        zipOptions.FileExistAction = FileExistAction.Overwrite; // Acción si el archivo ZIP ya existe (sobrescribir)
+
+        // Comprime la carpeta en el archivo ZIP
+        using (var zipArchive = new Archive(zipFilePath, zipOptions))
+        {
+            zipArchive.CreateEntries(sourceFolder, "*", true);
+            zipArchive.Save();
+        }
+
+        Console.WriteLine("Carpeta comprimida en archivo ZIP con éxito.");
+    }
+}
