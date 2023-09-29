@@ -363,3 +363,34 @@ else
         archive.Save(archivoZip);
     }
 }
+
+
+Ggghhhvg
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta al archivo ZIP de destino
+        string zipFileName = "archivo.zip";
+
+        // Crear una instancia de ZipArchive
+        using (var archive = new ZipArchive())
+        {
+            // Agregar archivos a comprimir al archivo ZIP
+            archive.CreateEntries("archivo1.txt", "archivo2.txt");
+
+            // Puedes verificar si un archivo ya existe en el archivo ZIP
+            if (archive.ContainsEntry("archivo1.txt"))
+            {
+                // Puedes sobrescribir el archivo existente si es necesario
+                archive.AddEntry("archivo1.txt", "contenido actualizado");
+            }
+
+            // Guardar el archivo ZIP
+            archive.Save(zipFileName);
+        }
+    }
+}
