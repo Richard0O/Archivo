@@ -275,3 +275,53 @@ class Program
         Console.WriteLine("Archivo ZIP extraído exitosamente.");
     }
 }
+
+Nnnmmn
+
+// Ruta del archivo ZIP que deseas crear o sobrescribir
+string zipFilePath = "ruta/del/archivo.zip";
+
+// Verifica si el archivo ZIP ya existe
+if (File.Exists(zipFilePath))
+{
+    // Pregunta al usuario si desea sobrescribir el archivo
+    Console.Write("El archivo ZIP ya existe. ¿Deseas sobrescribirlo? (S/N): ");
+    string respuesta = Console.ReadLine();
+
+    // Si el usuario responde "S" o "s", sobrescribe el archivo; de lo contrario, sal del programa
+    if (respuesta.Equals("S", StringComparison.OrdinalIgnoreCase))
+    {
+        // Crea un nuevo archivo ZIP o sobrescribe el existente
+        using (var archive = new Archive(zipFilePath))
+        {
+            // Agrega tus listas u otros archivos al archivo ZIP
+            // Por ejemplo:
+            // archive.CreateEntry("lista1.txt", File.OpenRead("ruta/a/lista1.txt"));
+            // archive.CreateEntry("lista2.txt", File.OpenRead("ruta/a/lista2.txt"));
+            // ...
+
+            Console.WriteLine("Archivo ZIP sobrescrito exitosamente.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("No se ha realizado ninguna acción.");
+    }
+}
+else
+{
+    // El archivo ZIP no existe, por lo que puedes crearlo sin preguntar
+    using (var archive = new Archive(zipFilePath))
+    {
+        // Agrega tus listas u otros archivos al archivo ZIP
+        // Por ejemplo:
+        // archive.CreateEntry("lista1.txt", File.OpenRead("ruta/a/lista1.txt"));
+        // archive.CreateEntry("lista2.txt", File.OpenRead("ruta/a/lista2.txt"));
+        // ...
+
+        Console.WriteLine("Archivo ZIP creado exitosamente.");
+    }
+}
+
+// Espera a que el usuario presione una tecla antes de salir
+Console.ReadKey();
