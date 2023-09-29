@@ -325,3 +325,41 @@ else
 
 // Espera a que el usuario presione una tecla antes de salir
 Console.ReadKey();
+
+Kkkkkkll
+
+string archivoZip = "miarchivo.zip";
+
+if (File.Exists(archivoZip))
+{
+    using (Archive archive = new Archive(archivoZip))
+    {
+        // Puedes acceder a la lista de archivos existentes en el archivo ZIP
+        IList<string> archivosEnZip = archive.GetFileNames();
+        
+        // Aquí puedes verificar qué archivos se sobrescribirán antes de agregar nuevos archivos
+        foreach (string archivoExistente in archivosEnZip)
+        {
+            Console.WriteLine("Archivo existente en el ZIP: " + archivoExistente);
+        }
+        
+        // Agrega tus nuevos archivos al archivo ZIP
+        // Por ejemplo, si tienes una lista de archivos a agregar llamada 'archivosNuevos'
+        foreach (string archivoNuevo in archivosNuevos)
+        {
+            archive.AddFile(archivoNuevo);
+        }
+    }
+}
+else
+{
+    // Si el archivo ZIP no existe, puedes crearlo y agregar archivos de la misma manera
+    using (Archive archive = new Archive())
+    {
+        foreach (string archivoNuevo in archivosNuevos)
+        {
+            archive.AddFile(archivoNuevo);
+        }
+        archive.Save(archivoZip);
+    }
+}
