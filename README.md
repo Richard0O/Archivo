@@ -225,3 +225,25 @@ using (var archive = ArchiveFactory.Open("archivo_con_contraseña.zip", new Read
         }
     }
 }
+
+////////
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta al archivo ZIP que deseas extraer
+        string archivoZip = "ruta/al/archivo.zip";
+
+        // Configura el objeto de extracción
+        using (var archive = new Archive(archivoZip))
+        {
+            // Extrae todos los archivos en la misma ubicación
+            archive.ExtractToDirectory(".");
+        }
+
+        Console.WriteLine("Archivos extraídos correctamente.");
+    }
+}
