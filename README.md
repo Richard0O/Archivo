@@ -247,3 +247,31 @@ class Program
         Console.WriteLine("Archivos extraídos correctamente.");
     }
 }
+
+///////
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta del archivo ZIP que deseas extraer
+        string archivoZip = "ruta_del_archivo.zip";
+
+        // Crear una instancia de ZipArchive para abrir el archivo ZIP
+        using (ZipArchive zipArchive = new ZipArchive(archivoZip))
+        {
+            // Obtener el nombre del archivo sin extensión
+            string nombreCarpeta = System.IO.Path.GetFileNameWithoutExtension(archivoZip);
+
+            // Crear una carpeta con el nombre del archivo ZIP
+            System.IO.Directory.CreateDirectory(nombreCarpeta);
+
+            // Extraer el contenido del archivo ZIP en la carpeta creada
+            zipArchive.ExtractToDirectory(nombreCarpeta);
+        }
+
+        Console.WriteLine("Archivo ZIP extraído exitosamente.");
+    }
+}
