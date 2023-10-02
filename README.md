@@ -250,4 +250,46 @@ Program
         catch (Exception ex)
         {
             Console.WriteLine($"Se produjo una excepción: {ex.Message}");
-   
+
+////////////////
+
+
+  contraseña
+string zipFilePath = "ruta/archivo.zip";
+string password = "tu_contraseña";
+
+// Abre el archivo zip con contraseña
+using (Archive archive = new Archive())
+{
+    archive.Encryption = new EncryptionInfo(EncryptionAlgorithm.Aes128Bit, password);
+    archive.Open(zipFilePath);
+
+    // Carpeta que deseas extraer
+    string folderToExtract = "nombre_de_la_carpeta";
+
+    // Directorio de destino
+    string targetDirectory = "directorio_de_destino";
+
+    // Itera a través de los elementos del archivo zip
+    foreach (ArchiveEntry entry in archive)
+    {
+        if (entry.FullName.StartsWith(folderToExtract))
+        {
+            string entryPath = Path.Combine(targetDirectory, entry.FullName.Substring(folderToExtract.Length));
+
+            // Verifica si el archivo ya existe en el destino
+            if (File.Exists(entryPath))
+            {
+                // El archivo ya existe, puedes manejarlo aquí
+            }
+            else
+            {
+                // Extrae el archivo
+                using (FileStream fs = File.Create(entryPath))
+                {
+                    entry.Open().CopyTo(fs);
+                }
+            }
+        }
+    }
+} 
