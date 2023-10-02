@@ -188,3 +188,66 @@ Comprimir vrias carpetas
 
 ////////////////////////////////////////
         
+Program
+{
+    static void Main()
+    {
+        // Ruta al archivo ZIP de origen
+        string zipFilePath = "ruta/al/archivo.zip";
+
+        // Contraseña esperada para el archivo ZIP
+        string expectedPassword = "tu_contraseña_esperada";
+
+        // Obtener la carpeta que contiene el archivo ZIP
+        string zipFileFolder = Path.GetDirectoryName(zipFilePath);
+
+        // Crear un objeto ZipArchive para abrir el archivo ZIP con contraseña
+        try
+        {
+            using (var archive = new ZipArchive(zipFilePath))
+            {
+                // Verificar si el archivo ZIP está protegido con contraseña
+                if (archive.EncryptionMethod != EncryptionMethod.None)
+                {
+                    // Solicitar la contraseña al usuario
+                    Console.Write("Ingrese la contraseña para el archivo ZIP: ");
+                    string enteredPassword = Console.ReadLine();
+
+                    // Verificar si la contraseña es correcta
+                    if (enteredPassword != expectedPassword)
+                    {
+                        Console.WriteLine("Contraseña incorrecta. No se pueden extraer archivos.");
+                        return;
+                    }
+                }
+
+                // Iterar a través de las entradas del archivo ZIP
+                foreach (var entry in archive.Entries)
+                {
+                    // Verificar si la entrada es un archivo
+                    if (!entry.IsDirectory)
+                    {
+                        // Construir la ruta completa del archivo de destino
+                        string destinationFilePath = Path.Combine(zipFileFolder, entry.Name);
+
+                        // Verificar si el archivo de destino ya existe
+                        if (File.Exists(destinationFilePath))
+                        {
+                            Console.WriteLine($"El archivo {entry.Name} ya existe en la carpeta de origen del archivo ZIP.");
+                        }
+                        else
+                        {
+                            // Extraer el archivo del archivo ZIP a la carpeta de origen del archivo ZIP
+                            entry.Extract(destinationFilePath);
+                            Console.WriteLine($"Se extrajo el archivo {entry.Name} en la misma carpeta que contiene el archivo ZIP.");
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Proceso completado.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Se produjo una excepción: {ex.Message}");
+   
