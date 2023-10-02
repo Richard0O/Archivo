@@ -130,9 +130,61 @@ Comprimir Una carpeta
             // Guardar el archivo ZIP en la ruta de salida especificada
             zipArchive.Save(archivoDestino);
         }
+////////////////////////////////////////////////////////////////
+ List<string> carpetasAComprimir = new List<string>
+        {
+            @"C:\Users\ricky\Desktop\ArchivosTest\Nueva carpeta",
+           @"C:\Users\ricky\Desktop\ArchivosTest\ArchivosTest",
+            // Agrega más rutas de carpetas según tus necesidades
+        };
+
+        // Ruta del archivo ZIP de salida
+        string archivoZipSalida = @"C:\Users\ricky\Desktop\ArchivosTest\resultado.zip";
+
+        // Comprimir las carpetas en un archivo ZIP
+        using (var archive = new Archive())
+        {
+            foreach (string carpeta in carpetasAComprimir)
+            {
+                // Agrega cada carpeta a la lista de archivos a comprimir
+                archive.CreateEntries(carpeta);
+            }
+
+            // Guarda el archivo ZIP resultante
+            archive.Save(archivoZipSalida);
+        }
+
+        Console.WriteLine("Carpetas comprimidas con éxito en " + archivoZipSalida);
 
         Console.WriteLine($"La carpeta '{carpetaOrigen}' ha sido comprimida en '{archivoDestino}'.");
 
 ////////////////////////////////////////////////////////
 Comprimir vrias carpetas
+
+ List<string> carpetasAComprimir = new List<string>
+        {
+            @"C:\Users\ricky\Desktop\ArchivosTest\Nueva carpeta",
+           @"C:\Users\ricky\Desktop\ArchivosTest\ArchivosTest",
+            // Agrega más rutas de carpetas según tus necesidades
+        };
+
+        // Ruta del archivo ZIP de salida
+        string archivoZipSalida = @"C:\Users\ricky\Desktop\ArchivosTest\resultado.zip";
+
+        // Comprimir las carpetas en un archivo ZIP
+        using (var archive = new Archive())
+        {
+            foreach (string carpeta in carpetasAComprimir)
+            {
+                // Agrega cada carpeta a la lista de archivos a comprimir
+                archive.CreateEntries(carpeta);
+            }
+
+            // Guarda el archivo ZIP resultante
+            archive.Save(archivoZipSalida);
+        }
+
+        Console.WriteLine("Carpetas comprimidas con éxito en " + archivoZipSalida);
+
+////////////////////////////////////////
         
