@@ -293,3 +293,58 @@ using (Archive archive = new Archive())
         }
     }
 } 
+
+Hhhhhh
+
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;Utiliza el siguiente código para descomprimir un archivo ZIP con contraseña:using System;
+using System.IO;
+using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string zipFilePath = "archivo.zip"; // Ruta del archivo ZIP
+        string extractPath = "carpeta_destino"; // Carpeta donde se extraerán los archivos
+        string password = "tu_contraseña"; // Contraseña del archivo ZIP
+
+        try
+        {
+            using (FileStream fs = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
+            {
+                using (ZipInputStream zipStream = new ZipInputStream(fs))
+                {
+                    zipStream.Password = password;
+
+                    ZipEntry entry;
+                    while ((entry = zipStream.GetNextEntry()) != null)
+                    {
+                        if (!entry.IsFile)
+                            continue;
+
+                        string entryFileName = entry.Name;
+                        string fullEntryPath = Path.Combine(extractPath, entryFileName);
+                        string directory = Path.GetDirectoryName(fullEntryPath);
+
+                        if (!Directory.Exists(directory))
+                            Directory.CreateDirectory(directory);
+
+                        using (FileStream outputStream = new FileStream(fullEntryPath, FileMode.Create, FileAccess.Write))
+                        {
+                            byte[] buffer = new byte[4096];
+                            StreamUtils.Copy(zipStream, outputStream, buffer);
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("Descompresión exitosa.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
