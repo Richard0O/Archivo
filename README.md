@@ -348,3 +348,37 @@ class Program
         }
     }
 }
+
+/////////
+
+string zipFilePath = "ruta_del_archivo_zip.zip";
+string extractFolder = "ruta_de_la_carpeta_de_extraccion";
+string password = "tu_contraseña";
+
+using (FileStream fs = File.OpenRead(zipFilePath))
+{
+    var loadOptions = new LoadOptions();
+    loadOptions.Password = password;
+
+    using (Archive archive = new Archive(fs, loadOptions))
+    {
+        foreach (var entry in archive.Entries)
+        {
+            string entryPath = Path.Combine(extractFolder, entry.Name);
+
+            if (entry.IsDirectory)
+            {
+                // Crea directorios si no existen
+                Directory.CreateDirectory(entryPath);
+            }
+            else
+            {
+                // Extrae archivos
+                using (FileStream entryStream = File.Create(entryPath))
+                {
+                    entry.Extract(entryStream);
+                }
+            }
+        }
+    }
+}
