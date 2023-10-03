@@ -476,3 +476,46 @@ catch (Exception ex)
 {
     Console.WriteLine("Ocurrió un error al intentar validar la contraseña: " + ex.Message);
 }
+
+Ttgggggggg
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta del archivo ZIP
+        string archivoZip = "archivo.zip";
+        // Contraseña del archivo ZIP
+        string contraseña = "tu_contraseña";
+
+        // Crear un objeto ZipArchive
+        using (var zipArchive = new ZipArchive(archivoZip))
+        {
+            // Verificar si la contraseña es correcta
+            if (zipArchive.CheckPassword(contraseña))
+            {
+                // Ruta de la carpeta de destino para la extracción
+                string carpetaDestino = "carpeta_destino";
+
+                // Extraer la carpeta o archivos
+                zipArchive.ExtractToDirectory(carpetaDestino);
+
+                // Verificar si los archivos extraídos ya existen
+                foreach (var archivoEnZip in zipArchive.Entries)
+                {
+                    string rutaArchivoDestino = Path.Combine(carpetaDestino, archivoEnZip.FullName);
+                    if (File.Exists(rutaArchivoDestino))
+                    {
+                        Console.WriteLine($"El archivo {archivoEnZip.FullName} ya existe en la carpeta de destino.");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("La contraseña es incorrecta. No se realizó la extracción.");
+            }
+        }
+    }
+}
