@@ -382,3 +382,68 @@ using (FileStream fs = File.OpenRead(zipFilePath))
         }
     }
 }
+
+/////// 
+
+
+using Aspose.Zip;
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta del archivo ZIP protegido por contraseña
+        string archivoZip = "ruta/del/archivo.zip";
+        
+        // Contraseña que deseas validar
+        string contraseña = "tu_contraseña";
+
+        // Validar la contraseña antes de intentar la extracción
+        if (EsContraseñaCorrecta(archivoZip, contraseña))
+        {
+            // La contraseña es correcta, ahora puedes extraer el archivo ZIP
+            string directorioDestino = "ruta/de/destino";
+
+            using (var archive = new ZipArchive(archivoZip, new ZipLoadOptions { Password = contraseña }))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    string destinoArchivo = Path.Combine(directorioDestino, entry.Name);
+                    if (File.Exists(destinoArchivo))
+                    {
+                        Console.WriteLine($"El archivo {entry.Name} ya existe en el directorio de destino.");
+                    }
+                    else
+                    {
+                        entry.Extract(destinoArchivo);
+                        Console.WriteLine($"El archivo {entry.Name} ha sido extraído.");
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("La contraseña es incorrecta.");
+        }
+    }
+
+    // Función para validar la contraseña de un archivo ZIP
+    static bool EsContraseñaCorrecta(string archivoZip, string contraseña)
+    {
+        try
+        {
+            // Intentar abrir el archivo ZIP con la contraseña
+            using (var archive = new ZipArchive(archivoZip, new ZipLoadOptions { Password = contraseña }))
+            {
+                // Si no se lanza una excepción, la contraseña es correcta
+                return true;
+            }
+        }
+        catch (InvalidPasswordException)
+        {
+            // La contraseña es incorrecta
+            return false;
+        }
+    }
+}
