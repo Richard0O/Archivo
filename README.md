@@ -447,3 +447,32 @@ class Program
         }
     }
 }
+
+Hhhhhh
+string zipFilePath = "ruta_del_archivo_zip.zip";
+string passwordToCheck = "contraseña_a_validar";
+
+try
+{
+    using (FileStream fs = File.OpenRead(zipFilePath))
+    {
+        var loadOptions = new LoadOptions();
+        loadOptions.Password = passwordToCheck;
+
+        using (Archive archive = new Archive(fs, loadOptions))
+        {
+            // Si no se produce una excepción al abrir el archivo con la contraseña proporcionada,
+            // eso significa que la contraseña es correcta.
+            Console.WriteLine("La contraseña es válida.");
+        }
+    }
+}
+catch (InvalidPasswordException)
+{
+    // La excepción InvalidPasswordException se lanza si la contraseña es incorrecta.
+    Console.WriteLine("La contraseña es incorrecta.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Ocurrió un error al intentar validar la contraseña: " + ex.Message);
+}
