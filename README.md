@@ -188,334 +188,49 @@ Comprimir vrias carpetas
 
 ////////////////////////////////////////
         
-Program
-{
-    static void Main()
-    {
-        // Ruta al archivo ZIP de origen
-        string zipFilePath = "ruta/al/archivo.zip";
+ System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        string archivoZip = @"C:\Users\ricky\Desktop\ArchivosTest\ArchivosTest.zip";
 
-        // Contraseña esperada para el archivo ZIP
-        string expectedPassword = "tu_contraseña_esperada";
+        // Contraseña que deseas validar
+        string password = "123";
 
-        // Obtener la carpeta que contiene el archivo ZIP
-        string zipFileFolder = Path.GetDirectoryName(zipFilePath);
+        //string archivoZip = "ruta/archivo.zip"; // Ruta del archivo ZIP
+        string destino = @"C:\Users\ricky\Desktop\ArchivosTest"; // Directorio de destino donde se extraerán los archivos
+                                                                 //string contraseña = "tu_contraseña"; // Contraseña del archivo ZIP (si está protegido con contraseña)
 
-        // Crear un objeto ZipArchive para abrir el archivo ZIP con contraseña
+
         try
         {
-            using (var archive = new ZipArchive(zipFilePath))
+            // Verificar si el archivo ZIP existe
+            if (!File.Exists(archivoZip))
             {
-                // Verificar si el archivo ZIP está protegido con contraseña
-                if (archive.EncryptionMethod != EncryptionMethod.None)
-                {
-                    // Solicitar la contraseña al usuario
-                    Console.Write("Ingrese la contraseña para el archivo ZIP: ");
-                    string enteredPassword = Console.ReadLine();
+                Console.WriteLine("El archivo ZIP no existe.");
+                return;
+            }
 
-                    // Verificar si la contraseña es correcta
-                    if (enteredPassword != expectedPassword)
-                    {
-                        Console.WriteLine("Contraseña incorrecta. No se pueden extraer archivos.");
-                        return;
-                    }
-                }
+            // Crear un objeto ZipArchive para abrir el archivo ZIP
+            using (Archive zip = new Archive(archivoZip, new ArchiveLoadOptions { DecryptionPassword = password }))
+            {
+                // Establecer la contraseña si el archivo ZIP está protegido
 
-                // Iterar a través de las entradas del archivo ZIP
-                foreach (var entry in archive.Entries)
-                {
-                    // Verificar si la entrada es un archivo
-                    if (!entry.IsDirectory)
-                    {
-                        // Construir la ruta completa del archivo de destino
-                        string destinationFilePath = Path.Combine(zipFileFolder, entry.Name);
+                // Extraer todos los archivos y carpetas del archivo ZIP
+                zip.ExtractToDirectory(destino); // El segundo parámetro indica que se deben mantener los subdirectorios
 
-                        // Verificar si el archivo de destino ya existe
-                        if (File.Exists(destinationFilePath))
-                        {
-                            Console.WriteLine($"El archivo {entry.Name} ya existe en la carpeta de origen del archivo ZIP.");
-                        }
-                        else
-                        {
-                            // Extraer el archivo del archivo ZIP a la carpeta de origen del archivo ZIP
-                            entry.Extract(destinationFilePath);
-                            Console.WriteLine($"Se extrajo el archivo {entry.Name} en la misma carpeta que contiene el archivo ZIP.");
-                        }
-                    }
-                }
+                Console.WriteLine("Archivos extraídos con éxito.");
+            }
+
+            // Verificar si los archivos extraídos ya existen en el directorio de destino
+            foreach (string archivoExtraido in Directory.GetFiles(destino, "*", SearchOption.AllDirectories))
+            {
+                Console.WriteLine($"Archivo extraído: {archivoExtraido}");
             }
 
             Console.WriteLine("Proceso completado.");
+
+
         }
         catch (Exception ex)
-        {
-            Console.WriteLine($"Se produjo una excepción: {ex.Message}");
-
-////////////////
-
-
-  contraseña
-string zipFilePath = "ruta/archivo.zip";
-string password = "tu_contraseña";
-
-// Abre el archivo zip con contraseña
-using (Archive archive = new Archive())
-{
-    archive.Encryption = new EncryptionInfo(EncryptionAlgorithm.Aes128Bit, password);
-    archive.Open(zipFilePath);
-
-    // Carpeta que deseas extraer
-    string folderToExtract = "nombre_de_la_carpeta";
-
-    // Directorio de destino
-    string targetDirectory = "directorio_de_destino";
-
-    // Itera a través de los elementos del archivo zip
-    foreach (ArchiveEntry entry in archive)
-    {
-        if (entry.FullName.StartsWith(folderToExtract))
-        {
-            string entryPath = Path.Combine(targetDirectory, entry.FullName.Substring(folderToExtract.Length));
-
-            // Verifica si el archivo ya existe en el destino
-            if (File.Exists(entryPath))
-            {
-                // El archivo ya existe, puedes manejarlo aquí
-            }
-            else
-            {
-                // Extrae el archivo
-                using (FileStream fs = File.Create(entryPath))
-                {
-                    entry.Open().CopyTo(fs);
-                }
-            }
+        { 
+            Console.WriteLine("Error " + ex.Message);
         }
     }
-} 
-
-Hhhhhh
-
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;Utiliza el siguiente código para descomprimir un archivo ZIP con contraseña:using System;
-using System.IO;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        string zipFilePath = "archivo.zip"; // Ruta del archivo ZIP
-        string extractPath = "carpeta_destino"; // Carpeta donde se extraerán los archivos
-        string password = "tu_contraseña"; // Contraseña del archivo ZIP
-
-        try
-        {
-            using (FileStream fs = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
-            {
-                using (ZipInputStream zipStream = new ZipInputStream(fs))
-                {
-                    zipStream.Password = password;
-
-                    ZipEntry entry;
-                    while ((entry = zipStream.GetNextEntry()) != null)
-                    {
-                        if (!entry.IsFile)
-                            continue;
-
-                        string entryFileName = entry.Name;
-                        string fullEntryPath = Path.Combine(extractPath, entryFileName);
-                        string directory = Path.GetDirectoryName(fullEntryPath);
-
-                        if (!Directory.Exists(directory))
-                            Directory.CreateDirectory(directory);
-
-                        using (FileStream outputStream = new FileStream(fullEntryPath, FileMode.Create, FileAccess.Write))
-                        {
-                            byte[] buffer = new byte[4096];
-                            StreamUtils.Copy(zipStream, outputStream, buffer);
-                        }
-                    }
-                }
-            }
-
-            Console.WriteLine("Descompresión exitosa.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
-}
-
-/////////
-
-string zipFilePath = "ruta_del_archivo_zip.zip";
-string extractFolder = "ruta_de_la_carpeta_de_extraccion";
-string password = "tu_contraseña";
-
-using (FileStream fs = File.OpenRead(zipFilePath))
-{
-    var loadOptions = new LoadOptions();
-    loadOptions.Password = password;
-
-    using (Archive archive = new Archive(fs, loadOptions))
-    {
-        foreach (var entry in archive.Entries)
-        {
-            string entryPath = Path.Combine(extractFolder, entry.Name);
-
-            if (entry.IsDirectory)
-            {
-                // Crea directorios si no existen
-                Directory.CreateDirectory(entryPath);
-            }
-            else
-            {
-                // Extrae archivos
-                using (FileStream entryStream = File.Create(entryPath))
-                {
-                    entry.Extract(entryStream);
-                }
-            }
-        }
-    }
-}
-
-/////// 
-
-
-using Aspose.Zip;
-using System;
-
-class Program
-{
-    static void Main()
-    {
-        // Ruta del archivo ZIP protegido por contraseña
-        string archivoZip = "ruta/del/archivo.zip";
-        
-        // Contraseña que deseas validar
-        string contraseña = "tu_contraseña";
-
-        // Validar la contraseña antes de intentar la extracción
-        if (EsContraseñaCorrecta(archivoZip, contraseña))
-        {
-            // La contraseña es correcta, ahora puedes extraer el archivo ZIP
-            string directorioDestino = "ruta/de/destino";
-
-            using (var archive = new ZipArchive(archivoZip, new ZipLoadOptions { Password = contraseña }))
-            {
-                foreach (var entry in archive.Entries)
-                {
-                    string destinoArchivo = Path.Combine(directorioDestino, entry.Name);
-                    if (File.Exists(destinoArchivo))
-                    {
-                        Console.WriteLine($"El archivo {entry.Name} ya existe en el directorio de destino.");
-                    }
-                    else
-                    {
-                        entry.Extract(destinoArchivo);
-                        Console.WriteLine($"El archivo {entry.Name} ha sido extraído.");
-                    }
-                }
-            }
-        }
-        else
-        {
-            Console.WriteLine("La contraseña es incorrecta.");
-        }
-    }
-
-    // Función para validar la contraseña de un archivo ZIP
-    static bool EsContraseñaCorrecta(string archivoZip, string contraseña)
-    {
-        try
-        {
-            // Intentar abrir el archivo ZIP con la contraseña
-            using (var archive = new ZipArchive(archivoZip, new ZipLoadOptions { Password = contraseña }))
-            {
-                // Si no se lanza una excepción, la contraseña es correcta
-                return true;
-            }
-        }
-        catch (InvalidPasswordException)
-        {
-            // La contraseña es incorrecta
-            return false;
-        }
-    }
-}
-
-Hhhhhh
-string zipFilePath = "ruta_del_archivo_zip.zip";
-string passwordToCheck = "contraseña_a_validar";
-
-try
-{
-    using (FileStream fs = File.OpenRead(zipFilePath))
-    {
-        var loadOptions = new LoadOptions();
-        loadOptions.Password = passwordToCheck;
-
-        using (Archive archive = new Archive(fs, loadOptions))
-        {
-            // Si no se produce una excepción al abrir el archivo con la contraseña proporcionada,
-            // eso significa que la contraseña es correcta.
-            Console.WriteLine("La contraseña es válida.");
-        }
-    }
-}
-catch (InvalidPasswordException)
-{
-    // La excepción InvalidPasswordException se lanza si la contraseña es incorrecta.
-    Console.WriteLine("La contraseña es incorrecta.");
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Ocurrió un error al intentar validar la contraseña: " + ex.Message);
-}
-
-Ttgggggggg
-
-using Aspose.Zip;
-
-class Program
-{
-    static void Main()
-    {
-        // Ruta del archivo ZIP
-        string archivoZip = "archivo.zip";
-        // Contraseña del archivo ZIP
-        string contraseña = "tu_contraseña";
-
-        // Crear un objeto ZipArchive
-        using (var zipArchive = new ZipArchive(archivoZip))
-        {
-            // Verificar si la contraseña es correcta
-            if (zipArchive.CheckPassword(contraseña))
-            {
-                // Ruta de la carpeta de destino para la extracción
-                string carpetaDestino = "carpeta_destino";
-
-                // Extraer la carpeta o archivos
-                zipArchive.ExtractToDirectory(carpetaDestino);
-
-                // Verificar si los archivos extraídos ya existen
-                foreach (var archivoEnZip in zipArchive.Entries)
-                {
-                    string rutaArchivoDestino = Path.Combine(carpetaDestino, archivoEnZip.FullName);
-                    if (File.Exists(rutaArchivoDestino))
-                    {
-                        Console.WriteLine($"El archivo {archivoEnZip.FullName} ya existe en la carpeta de destino.");
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("La contraseña es incorrecta. No se realizó la extracción.");
-            }
-        }
-    }
-}
