@@ -367,3 +367,30 @@ class Program
         }
     }
 }
+
+
+Hhhhhbh
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta al archivo ZIP que deseas extraer
+        string zipFilePath = "ruta/al/archivo.zip";
+        
+        // Crear una instancia de ZipArchive para trabajar con el archivo ZIP
+        using (var zipArchive = new ZipArchive(zipFilePath))
+        {
+            // Obtener el nombre del archivo ZIP sin la extensión
+            string folderName = System.IO.Path.GetFileNameWithoutExtension(zipFilePath);
+            
+            // Crear una carpeta con el mismo nombre que el archivo ZIP
+            System.IO.Directory.CreateDirectory(folderName);
+            
+            // Extraer todos los archivos y carpetas del archivo ZIP en la carpeta creada
+            zipArchive.ExtractTo(folderName);
+        }
+    }
+}
