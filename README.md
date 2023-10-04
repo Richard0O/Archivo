@@ -234,3 +234,42 @@ Comprimir vrias carpetas
             Console.WriteLine("Error " + ex.Message);
         }
     }
+
+Llll
+using Aspose.Zip;
+
+class Program
+{
+    static void Main()
+    {
+        // Ruta del archivo RAR y contraseña (si es necesario)
+        string archivoRAR = "ruta_del_archivo.rar";
+        string contraseña = "tu_contraseña";
+
+        // Ruta de la carpeta de destino
+        string carpetaDestino = "ruta_de_la_carpeta_de_destino";
+
+        // Inicializa el objeto de extracción
+        using (var zipArchive = new ZipArchive(archivoRAR))
+        {
+            // Si hay contraseña, configúrala
+            if (!string.IsNullOrEmpty(contraseña))
+            {
+                zipArchive.Password = contraseña;
+            }
+
+            // Extraer todos los archivos y subdirectorios
+            zipArchive.ExtractToDirectory(carpetaDestino);
+
+            // Verificar si se extrajeron archivos
+            if (zipArchive.Entries.Count > 0)
+            {
+                Console.WriteLine("Archivos extraídos exitosamente.");
+            }
+            else
+            {
+                Console.WriteLine("No se encontraron archivos en el archivo RAR.");
+            }
+        }
+    }
+}
