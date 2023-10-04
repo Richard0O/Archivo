@@ -324,3 +324,46 @@ class Program
         }
     }
 }
+
+
+Hhhh
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string zipFilePath = "archivo.zip"; // Ruta al archivo ZIP
+        string extractPath = "carpeta_extraida"; // Ruta donde deseas extraer los archivos
+
+        using (var archive = new Archive(zipFilePath))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (entry.IsFolder)
+                {
+                    // Verificar si la entrada es una carpeta y crearla en la ubicación de destino
+                    string folderPath = System.IO.Path.Combine(extractPath, entry.Name);
+                    if (!System.IO.Directory.Exists(folderPath))
+                    {
+                        System.IO.Directory.CreateDirectory(folderPath);
+                    }
+                }
+                else
+                {
+                    // Verificar si el archivo ya existe en la ubicación de destino
+                    string filePath = System.IO.Path.Combine(extractPath, entry.Name);
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        // Si el archivo no existe, extraerlo
+                        entry.Extract(filePath);
+                    }
+                    else
+                    {
+                        // El archivo ya existe, puedes manejar esto según tus necesidades
+                        Console.WriteLine($"El archivo {entry.Name} ya existe en {extractPath}");
+                    }
+                }
+            }
+        }
+    }
+}
