@@ -273,3 +273,54 @@ class Program
         }
     }
 }
+
+
+Fffffgcgg
+
+using Aspose.Zip;
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta del archivo ZIP
+        string zipFilePath = "ruta/al/archivo.zip";
+
+        // Ruta de la carpeta de destino
+        string extractFolderPath = "ruta/de/destino";
+
+        // Contraseña del archivo ZIP (ajusta esto según tu caso)
+        string zipPassword = "tu_contraseña";
+
+        // Verificar la contraseña antes de extraer
+        using (var archive = new Archive(zipFilePath))
+        {
+            if (archive.Password != zipPassword)
+            {
+                Console.WriteLine("Contraseña incorrecta para el archivo ZIP.");
+                return; // Salir sin extraer si la contraseña es incorrecta
+            }
+
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    // Ruta completa del archivo extraído
+                    string extractedFilePath = Path.Combine(extractFolderPath, entry.Name);
+
+                    // Verificar si el archivo ya existe
+                    if (File.Exists(extractedFilePath))
+                    {
+                        Console.WriteLine($"El archivo {entry.Name} ya existe.");
+                    }
+                    else
+                    {
+                        entry.Extract(extractFolderPath);
+                        Console.WriteLine($"El archivo {entry.Name} se extrajo con éxito.");
+                    }
+                }
+            }
+        }
+    }
+}
