@@ -394,3 +394,43 @@ class Program
         }
     }
 }
+
+///////////////////////////
+
+using System;
+using System.IO;
+using SharpCompress.Archives;
+using SharpCompress.Common;
+
+class Program
+{
+    static void Main()
+    {
+        string archivoZip = @"C:\Users\ricky\Desktop\ArchivosTest/ArchivosTest.zip"; // Reemplaza con el nombre de tu archivo ZIP
+
+
+        string carpetaDestino = Path.Combine(Path.GetFileNameWithoutExtension(Path.GetDirectoryName(archivoZip))); // Obtiene el nombre sin extensión
+        
+        if (!Directory.Exists(carpetaDestino))
+        {
+            Directory.CreateDirectory(carpetaDestino); // Crea la carpeta de destino si no existe
+        }
+
+        using (var archive = ArchiveFactory.Open(archivoZip))
+        {
+            foreach (var entry in archive.Entries)
+            {
+                if (!entry.IsDirectory)
+                {
+                    entry.WriteToDirectory(carpetaDestino, new ExtractionOptions()
+                    {
+                        ExtractFullPath = true,
+                        Overwrite = true
+                    });
+                }
+            }
+        }
+
+        Console.WriteLine($"El archivo ZIP '{archivoZip}' se extrajo en la carpeta '{carpetaDestino}'.");
+    }
+}
