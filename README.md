@@ -515,3 +515,29 @@ using (var archivoZip = new Archive())
     // Guarda el archivo ZIP en la ubicación deseada
     archivoZip.Save(@"C:\Ruta\De\Salida\archivo.zip");
 }
+
+Hhhhh
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Ruta de la carpeta que deseas comprimir
+        string carpetaOrigen = @"C:\Ruta\A\Tu\Carpeta";
+
+        // Ruta del archivo zip de destino
+        string archivoZip = @"C:\Ruta\Destino\Archivo.zip";
+
+        // Crear una instancia de ZipArchive
+        using (var archive = new ZipArchive())
+        {
+            // Agregar la carpeta a comprimir al archivo zip
+            archive.CreateEntry(carpetaOrigen, "Carpeta");
+
+            // Guardar el archivo zip
+            archive.Save(archivoZip);
+        }
+    }
+}
