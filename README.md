@@ -488,3 +488,17 @@ using (var archive = new Archive())
     archive.CreateEntryFromFile(archivoAComprimir, Path.GetFileName(archivoAComprimir), CompressionType.Deflated);
     archive.Save(archivoZIP);
 }
+
+Ggggggvvg
+
+List<string> archivosParaComprimir = new List<string>
+{
+    "archivo1.txt",
+    "archivo2.png",
+    // Agrega más archivos aquí
+};
+
+foreach (string archivo in archivosParaComprimir)
+{
+    archive.CreateEntryFromFile(archivo, Path.GetFileName(archivo), CompressionType.Deflated);
+}Finalmente, guarda la lista de archivos comprimidos en un archivo ZIP:archive.Save("archivo_comprimido.zip");
