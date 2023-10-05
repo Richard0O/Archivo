@@ -434,3 +434,10 @@ class Program
         Console.WriteLine($"El archivo ZIP '{archivoZip}' se extrajo en la carpeta '{carpetaDestino}'.");
     }
 }
+
+
+Yyyyyy
+
+
+               // Verifica si la contraseña es correcta
+                bool contraseñaCorrecta = zipArchive.VerifyPassword(contraseña);
