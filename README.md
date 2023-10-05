@@ -477,3 +477,14 @@ class Program
         }
     }
 }
+
+Rrrrrf
+
+string archivoAComprimir = "ruta\\archivo-a-comprimir.txt"; // Reemplaza con la ruta de tu archivo
+string archivoZIP = "ruta\\archivo-comprimido.zip"; // Reemplaza con la ruta de destino del archivo ZIP
+
+using (var archive = new Archive())
+{
+    archive.CreateEntryFromFile(archivoAComprimir, Path.GetFileName(archivoAComprimir), CompressionType.Deflated);
+    archive.Save(archivoZIP);
+}
