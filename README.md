@@ -441,3 +441,39 @@ Yyyyyy
 
                // Verifica si la contraseña es correcta
                 bool contraseñaCorrecta = zipArchive.VerifyPassword(contraseña);
+
+
+//////////
+
+using Aspose.Zip;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string archivoZip = "tu_archivo.zip";
+        string contraseña = "tu_contraseña";
+
+        try
+        {
+            using (var zipArchive = new Archive(archivoZip))
+            {
+                // Verifica si la contraseña es correcta
+                bool contraseñaCorrecta = zipArchive.VerifyPassword(contraseña);
+
+                if (contraseñaCorrecta)
+                {
+                    Console.WriteLine("Contraseña correcta.");
+                }
+                else
+                {
+                    Console.WriteLine("Contraseña incorrecta.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
