@@ -501,4 +501,17 @@ List<string> archivosParaComprimir = new List<string>
 foreach (string archivo in archivosParaComprimir)
 {
     archive.CreateEntryFromFile(archivo, Path.GetFileName(archivo), CompressionType.Deflated);
-}Finalmente, guarda la lista de archivos comprimidos en un archivo ZIP:archive.Save("archivo_comprimido.zip");
+}Finalmente, guarda la lista de archivos comprimidos en un archivo ZIP:archive.Save("archivo_comprimido.zip"
+
+Hhhhhhh
+
+using (var archivoZip = new Archive())
+{
+    foreach (string carpeta in carpetasAComprimir)
+    {
+        archivoZip.CreateEntry(carpeta, "", true);
+    }
+
+    // Guarda el archivo ZIP en la ubicación deseada
+    archivoZip.Save(@"C:\Ruta\De\Salida\archivo.zip");
+}
