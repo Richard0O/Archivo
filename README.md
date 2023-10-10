@@ -550,3 +550,31 @@ En Angular, un módulo es una parte fundamental de la arquitectura de la aplicac
 Decoradores
 
 @Component: Se usa para decorar clases de componentes en Angular. Define las propiedades del componente, como la plantilla HTML, los estilos, los metadatos y las dependencias.@NgModule: Se utiliza para decorar clases de módulos en Angular. Define cómo se agrupan y configuran los componentes, servicios y otros elementos dentro del módulo.@Injectable: Se aplica a clases de servicios y permite que Angular inyecte dependencias en esas clases. Esto es fundamental para la inyección de dependencias y la gestión de servicios en la aplicación.@Input y @Output: Se utilizan para decorar propiedades de componentes que se comunican con otros componentes a través de la entrada y salida de datos.@ViewChild y @ContentChild: Se utilizan para obtener referencias a elementos DOM dentro de componentes o directivas.@HostListener y @HostBinding: Se emplean para agregar oyentes de eventos y vinculación de propiedades a elementos DOM en componentes y directivas.En resumen, los decoradores en Angular permiten extender y configurar las clases de manera declarativa, lo que facilita la construcción de aplicaciones y la comunicación entre sus partes. Estos decoradores son esenciales para el funcionamiento de Angular y la creación de aplicaciones web dinámicas y mantenibles.
+
+@NgModule 
+El decorador `@NgModule` en Angular se utiliza para definir y configurar módulos. Un módulo es una parte fundamental de la arquitectura de una aplicación Angular y actúa como un contenedor que agrupa componentes, directivas, servicios y otros elementos relacionados.
+
+La función principal del decorador `@NgModule` en el código es definir un módulo y configurar sus propiedades. Aquí hay un ejemplo de cómo se utiliza `@NgModule` en el código:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent], // Componentes que pertenecen a este módulo.
+  imports: [BrowserModule], // Otros módulos que este módulo necesita importar.
+  providers: [], // Servicios disponibles para este módulo.
+  bootstrap: [AppComponent] // Componente raíz que se iniciará al cargar la aplicación.
+})
+export class AppModule { }
+```
+
+En este ejemplo:
+
+- `declarations` se utiliza para enumerar los componentes, directivas y tuberías que pertenecen a este módulo.
+- `imports` se utiliza para importar otros módulos que este módulo necesita para funcionar correctamente.
+- `providers` se utiliza para declarar los servicios que están disponibles para las partes de la aplicación que pertenecen a este módulo.
+- `bootstrap` se utiliza para especificar el componente raíz que se iniciará al cargar la aplicación.
+
+En resumen, `@NgModule` en el código se utiliza para definir la estructura y configuración de un módulo en Angular, lo que permite organizar y modularizar la aplicación de manera efectiva y gestionar sus dependencias.
