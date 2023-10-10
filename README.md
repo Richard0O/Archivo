@@ -578,3 +578,8 @@ En este ejemplo:
 - `bootstrap` se utiliza para especificar el componente raíz que se iniciará al cargar la aplicación.
 
 En resumen, `@NgModule` en el código se utiliza para definir la estructura y configuración de un módulo en Angular, lo que permite organizar y modularizar la aplicación de manera efectiva y gestionar sus dependencias.
+
+
+Ciclo de vida 
+
+En Angular, los componentes siguen un ciclo de vida específico que les permite ejecutar ciertas acciones en diferentes momentos de su existencia. Aquí hay un resumen de los principales eventos del ciclo de vida de un componente en Angular:ngOnChanges: Este evento se dispara cuando los datos de entrada (@Input) de un componente cambian. Permite reaccionar a cambios en las propiedades de entrada.ngOnInit: Se ejecuta una vez, después de que el componente y sus datos de entrada se inicializan. Es un buen lugar para inicializar variables y realizar tareas de configuración.ngDoCheck: Este evento se dispara cada vez que Angular verifica la detección de cambios. Puede utilizarse para realizar verificaciones personalizadas de cambios.ngAfterContentInit: Se llama después de que Angular proyecta contenido en el componente (por ejemplo, contenido proyectado a través de ng-content).ngAfterContentChecked: Se dispara después de cada verificación de contenido en el componente.ngAfterViewInit: Se llama después de que Angular inicializa las vistas y las vistas secundarias del componente.ngAfterViewChecked: Se ejecuta después de cada verificación de vista en el componente.ngOnDestroy: Se llama justo antes de que Angular destruya el componente. Es un buen lugar para realizar limpieza, como la anulación de suscripciones o la liberación de recursos.
