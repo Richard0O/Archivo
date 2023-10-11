@@ -542,84 +542,31 @@ class Program
     }
 }
 
-Yyyyu
+//// Angular 
 
-En Angular, un módulo es una parte fundamental de la arquitectura de la aplicación. Un módulo es un contenedor que agrupa componentes, directivas, servicios y otros elementos relacionados de la aplicación. Sirve para organizar y modularizar el código de tu aplicación Angular, lo que facilita la gestión y el mantenimiento de proyectos más grandes y complejos.En términos simples, un módulo es como una caja que contiene componentes y servicios relacionados. Cada aplicación Angular tiene al menos un módulo raíz, conocido como el módulo principal o "AppModule". Además, puedes crear módulos adicionales para dividir la funcionalidad de tu aplicación en partes más pequeñas y reutilizables.Los módulos se definen mediante el decorador @NgModule en TypeScript y especifican qué componentes, directivas, servicios, y otros módulos se deben incluir y cómo se deben configurar. Esto ayuda a Angular a comprender cómo ensamblar la aplicación y a gestionar las dependencias entre los diferentes elementos.En resumen, los módulos en Angular sirven para organizar y modularizar tu aplicación, mejorando su estructura, mantenibilidad y reutilización de código.
+App. component
 
-
-Decoradores
-
-@Component: Se usa para decorar clases de componentes en Angular. Define las propiedades del componente, como la plantilla HTML, los estilos, los metadatos y las dependencias.@NgModule: Se utiliza para decorar clases de módulos en Angular. Define cómo se agrupan y configuran los componentes, servicios y otros elementos dentro del módulo.@Injectable: Se aplica a clases de servicios y permite que Angular inyecte dependencias en esas clases. Esto es fundamental para la inyección de dependencias y la gestión de servicios en la aplicación.@Input y @Output: Se utilizan para decorar propiedades de componentes que se comunican con otros componentes a través de la entrada y salida de datos.@ViewChild y @ContentChild: Se utilizan para obtener referencias a elementos DOM dentro de componentes o directivas.@HostListener y @HostBinding: Se emplean para agregar oyentes de eventos y vinculación de propiedades a elementos DOM en componentes y directivas.En resumen, los decoradores en Angular permiten extender y configurar las clases de manera declarativa, lo que facilita la construcción de aplicaciones y la comunicación entre sus partes. Estos decoradores son esenciales para el funcionamiento de Angular y la creación de aplicaciones web dinámicas y mantenibles.
-
-@NgModule 
-El decorador `@NgModule` en Angular se utiliza para definir y configurar módulos. Un módulo es una parte fundamental de la arquitectura de una aplicación Angular y actúa como un contenedor que agrupa componentes, directivas, servicios y otros elementos relacionados.
-
-La función principal del decorador `@NgModule` en el código es definir un módulo y configurar sus propiedades. Aquí hay un ejemplo de cómo se utiliza `@NgModule` en el código:
-
-```typescript
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [AppComponent], // Componentes que pertenecen a este módulo.
-  imports: [BrowserModule], // Otros módulos que este módulo necesita importar.
-  providers: [], // Servicios disponibles para este módulo.
-  bootstrap: [AppComponent] // Componente raíz que se iniciará al cargar la aplicación.
-})
-export class AppModule { }
-```
-
-En este ejemplo:
-
-- `declarations` se utiliza para enumerar los componentes, directivas y tuberías que pertenecen a este módulo.
-- `imports` se utiliza para importar otros módulos que este módulo necesita para funcionar correctamente.
-- `providers` se utiliza para declarar los servicios que están disponibles para las partes de la aplicación que pertenecen a este módulo.
-- `bootstrap` se utiliza para especificar el componente raíz que se iniciará al cargar la aplicación.
-
-En resumen, `@NgModule` en el código se utiliza para definir la estructura y configuración de un módulo en Angular, lo que permite organizar y modularizar la aplicación de manera efectiva y gestionar sus dependencias.
+<label for=""> Nombre: </label>
+<input type="text" [(ngModel)] = "name">
+<label for=""> Correo electronico: </label>
+<input type="text" [(ngModel)] = "email">
+<label for=""> Telefono: </label>
+<input type="number" [(ngModel)] = "telefono">
 
 
-Ciclo de vida 
+{{name}} - {{email}} - {{telefono}}
 
-En Angular, los componentes siguen un ciclo de vida específico que les permite ejecutar ciertas acciones en diferentes momentos de su existencia. Aquí hay un resumen de los principales eventos del ciclo de vida de un componente en Angular:ngOnChanges: Este evento se dispara cuando los datos de entrada (@Input) de un componente cambian. Permite reaccionar a cambios en las propiedades de entrada.ngOnInit: Se ejecuta una vez, después de que el componente y sus datos de entrada se inicializan. Es un buen lugar para inicializar variables y realizar tareas de configuración.ngDoCheck: Este evento se dispara cada vez que Angular verifica la detección de cambios. Puede utilizarse para realizar verificaciones personalizadas de cambios.ngAfterContentInit: Se llama después de que Angular proyecta contenido en el componente (por ejemplo, contenido proyectado a través de ng-content).ngAfterContentChecked: Se dispara después de cada verificación de contenido en el componente.ngAfterViewInit: Se llama después de que Angular inicializa las vistas y las vistas secundarias del componente.ngAfterViewChecked: Se ejecuta después de cada verificación de vista en el componente.ngOnDestroy: Se llama justo antes de que Angular destruya el componente. Es un buen lugar para realizar limpieza, como la anulación de suscripciones o la liberación de recursos.
+<button (click)="sendValues()"> Enviar</button>
 
-Hhhhh
+/////
 
+app.componente.ts 
+name: string = "";
+  email: string = "";
+  telefono: number = 0;
 
-<form (submit)="onSubmit()">
-  <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" required>
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" [(ngModel)]="formData.email" required>
-
-  <button type="submit">Enviar</button>
-</form>Configurar el modelo de datos: En el archivo TypeScript del componente, define una variable para almacenar los datos del formulario y crea un método para manejar el envío del formulario:import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-nombre-componente',
-  templateUrl: './nombre-componente.component.html',
-  styleUrls: ['./nombre-componente.component.css']
-})
-export class NombreComponenteComponent {
-  formData = {
-    nombre: '',
-    email: ''
-  };
-
-  onSubmit() {
-    // Aquí puedes manejar el envío de datos, realizar validaciones, enviar a un servidor, etc.
+  sendValues(){
+    console.log(this.name, this.email, this.telefono);
   }
-}Configurar el módulo de formularios: Asegúrate de que el módulo de formularios esté importado en el módulo de tu aplicación. Agrega FormsModule a los imports en app.module.ts:import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // Agrega esta línea
-
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, FormsModule], // Añade FormsModule aquí
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
+Importa Formmodules
+  ///// 
