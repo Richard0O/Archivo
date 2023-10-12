@@ -636,3 +636,37 @@ export class HijoComponent {
   }
 }
 
+
+///// //
+
+
+import { Component, Input, OnInit, OnChanges, OnDestroy } from '@angular/core';
+
+@Component({
+  selector: 'app-product',
+  template: `
+    <div *ngIf="product">
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+    </div>
+  `,
+})
+export class ProductComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() product: any;
+
+  constructor() {
+    console.log('Constructor: El componente ha sido creado.');
+  }
+
+  ngOnChanges() {
+    console.log('ngOnChanges: Datos de entrada han cambiado.');
+  }
+
+  ngOnInit() {
+    console.log('ngOnInit: El componente ha sido inicializado.');
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy: El componente será destruido.');
+  }
+}
