@@ -569,4 +569,70 @@ name: string = "";
     console.log(this.name, this.email, this.telefono);
   }
 Importa Formmodules
-  ///// 
+  ///// //////////
+
+
+Ejemplo 1: Interpolación y Property BindingSupongamos que en tu componente TypeScript tienes la siguiente
+
+variable:nombre: string = "Juan";Y en tu componente HTML, puedes mostrar esta variable mediante interpolación y property binding:<!-- Interpolación -->
+<p>Nombre: {{ nombre }}</p>
+
+<!-- Property Binding -->
+<input [value]="nombre" (input)="nombre = $event.target.value" />En este ejemplo, la variable nombre se muestra en el párrafo a través de la interpolación y se enlaza a un campo de entrada de texto mediante property binding. Cualquier cambio en el campo de entrada de texto actualizará la variable nombre en el componente TypeScript.Ejemplo 2: EventosSupongamos que quieres que algo suceda en el componente TypeScript cuando se hace clic en un botón en el componente HTML://  
+
+ TypeScript
+Ni
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-mi-componente',
+  template: `
+    <button (click)="hacerAlgo()">Haz Algo</button>
+  `,
+})
+export class MiComponente {
+  hacerAlgo() {
+    console.log('Se hizo clic en el botón');
+    // Realiza alguna lógica adicional aquí
+  }
+}
+
+En este ejemplo, el método hacerAlgo() se ejecutará cuando se haga clic en el botón. Puedes agregar lógica adicional dentro de este método
+
+Ejemplo 3
+
+@Input() y @Output()Supongamos que tienes un componente hijo y quieres pasar datos desde un componente padre:// TypeScript del componente padre
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-padre',
+  template: `
+    <app-hijo [dato]="datoDelPadre" (evento)="manejarEvento($event)"></app-hijo>
+  `,
+})
+export class PadreComponent {
+  datoDelPadre: string = "Datos desde el padre";
+
+  manejarEvento(evento: string) {
+    console.log(`Evento desde el hijo: ${evento}`);
+  }
+}// TypeScript del componente hijo
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-hijo',
+  template: `
+    <p>{{ dato }}</p>
+    <button (click)="emitirEvento()">Emitir Evento</button>
+  `,
+})
+export class HijoComponent {
+  @Input() dato: string;
+  @Output() evento = new EventEmitter<string>();
+
+  emitirEvento() {
+    this.evento.emit("Evento desde el hijo");
+  }
+}
+
