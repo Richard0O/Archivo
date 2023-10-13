@@ -843,3 +843,67 @@ export class CountryListComponent {
 export class StateListComponent {
   @Input() selectedCountry: any;
 }
+
+/// /. 
+
+<!-- registro.component.html -->
+<form #registroForm="ngForm">
+  <div class="form-group">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required [(ngModel)]="registro.nombre">
+  </div>
+
+  <div class="form-group">
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" required [(ngModel)]="registro.apellido">
+  </div>
+
+  <div class="form-group">
+    <label for="pais">País:</label>
+    <select id="pais" name="pais" required [(ngModel)]="registro.pais">
+      <option value="1">País 1</option>
+      <option value="2">País 2</option>
+      <!-- Agrega más opciones de países aquí -->
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="estado">Estado:</label>
+    <select id="estado" name="estado" required [(ngModel)]="registro.estado">
+      <option *ngFor="let estado of estadosPorPais[registro.pais]" [value]="estado">{{ estado }}</option>
+    </select>
+  </div>
+
+  <button [disabled]="registroForm.invalid" (click)="submitForm()">Registrar</button>
+</form>
+
+
+Ttttt
+
+
+// registro.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-registro',
+  templateUrl: './registro.component.html',
+  styleUrls: ['./registro.component.css']
+})
+export class RegistroComponent {
+  registro = {
+    nombre: '',
+    apellido: '',
+    pais: '',
+    estado: ''
+  };
+
+  estadosPorPais = {
+    1: ['Estado 1a', 'Estado 1b'],
+    2: ['Estado 2a', 'Estado 2b']
+    // Define estados para otros países
+  };
+
+  submitForm() {
+    // Lógica para enviar los datos del formulario
+  }
+}
