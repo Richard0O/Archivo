@@ -732,3 +732,20 @@ import { FormsModule } from '@angular/forms';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+Ffff
+
+onSubmit() {
+  if (this.registroForm.form.valid) {
+    // Realizar validaciones adicionales si es necesario
+
+    // Enviar los datos al servidor (simulado con un mensaje de consola)
+    console.log('Datos del formulario:', this.nombre, this.email, this.pais, this.estado);
+
+    // Mostrar un mensaje de éxito
+    console.log('Registro exitoso');
+
+    // Redirigir al usuario a una página de inicio de sesión o de agradecimiento
+    // this.router.navigate(['/inicio-sesion']); // Asegúrate de importar RouterModule y ActivatedRoute para utilizar esta opción
+  }
+}
