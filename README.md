@@ -694,3 +694,41 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   <button type="submit" [disabled]="!registroForm.form.valid">Registrar</button>
 </form>
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-registro',
+  templateUrl: './registro.component.html',
+  styleUrls: ['./registro.component.css']
+})
+export class RegistroComponent {
+  nombre: string;
+  email: string;
+  pais: string;
+  estado: string;
+  
+  estados = {
+    pais1: ['Estado 1', 'Estado 2'],
+    pais2: ['Estado 3', 'Estado 4']
+    // Agrega más estados por país
+  };
+
+  onSubmit() {
+    // Agregar la lógica para enviar el formulario aquí
+  }
+}
+
+import { FormsModule } from '@angular/forms';
+
+@NgModule({
+  declarations: [
+    // ...
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule, // Agrega FormsModule aquí
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
