@@ -670,3 +670,27 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     console.log('ngOnDestroy: El componente será destruido.');
   }
 }
+
+/////////////////// / ////
+
+<form (ngSubmit)="onSubmit()" #registroForm="ngForm">
+  <label for="nombre">Nombre:</label>
+  <input type="text" id="nombre" name="nombre" [(ngModel)]="nombre" required>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" [(ngModel)]="email" required>
+
+  <label for="pais">País:</label>
+  <select id="pais" name="pais" [(ngModel)]="pais" required>
+    <option value="pais1">País 1</option>
+    <option value="pais2">País 2</option>
+    <!-- Agrega más países aquí -->
+  </select>
+
+  <label for="estado">Estado:</label>
+  <select id="estado" name="estado" [(ngModel)]="estado" required>
+    <option *ngFor="let state of estados[pais]" [value]="state">{{ state }}</option>
+  </select>
+
+  <button type="submit" [disabled]="!registroForm.form.valid">Registrar</button>
+</form>
