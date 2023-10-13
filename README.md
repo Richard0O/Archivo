@@ -749,3 +749,48 @@ onSubmit() {
     // this.router.navigate(['/inicio-sesion']); // Asegúrate de importar RouterModule y ActivatedRoute para utilizar esta opción
   }
 }
+
+
+
+import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
+
+@Component({
+  selector: 'app-country-list',
+  template: `
+    <h1>Countries</h1>
+    <form [formGroup]="countryForm">
+      <select formControlName="selectedCountry">
+        <option [value]="null">Select a country</option>
+        <option *ngFor="let country of countries" [value]="country">{{ country.name }}</option>
+      </select>
+    </form>
+    <app-state-list [selectedCountry]="countryForm.get('selectedCountry').value"></app-state-list>
+  `,
+})
+export class CountryListComponent {
+  countries = [
+    { name: 'Country 1' },
+    { name: 'Country 2' },
+    // Agrega más países según tus necesidades.
+  ];
+
+  countryForm = new FormGroup({
+    selectedCountry: new FormControl(null),
+  });
+}En tu archivo de componente StateListComponent, recibe el país seleccionado y muestra la lista de estados correspondiente:import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-state-list',
+  template: `
+    <h2>States</h2>
+    <ul *ngIf="selectedCountry">
+      <li *ngFor="let state of selectedCountry.states">
+        {{ state.name }}
+      </li>
+    </ul>
+  `,
+})
+export class StateListComponent {
+  @Input() selectedCountry: any;
+}
