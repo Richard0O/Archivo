@@ -1,4 +1,53 @@
 Yhhhh
+
+!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de País y Estado</title>
+</head>
+<body>
+    <form>
+        <label for="country">País:</label>
+        <select id="country" onchange="actualizarEstados()">
+            <option value="selecciona">Selecciona un país</option>
+            <option value="usa">Estados Unidos</option>
+            <option value="mexico">México</option>
+        </select>
+        
+        <br>
+        
+        <label for="state">Estado:</label>
+        <select id="state">
+            <option value="selecciona">Selecciona un estado</option>
+        </select>
+    </form>
+    
+    <script>
+        function actualizarEstados() {
+            const countrySelect = document.getElementById('country');
+            const stateSelect = document.getElementById('state');
+            
+            stateSelect.innerHTML = ''; // Limpiar las opciones actuales
+            
+            if (countrySelect.value === 'usa') {
+                const estadosUSA = ['California', 'Texas', 'Nueva York', 'Florida'];
+                estadosUSA.forEach(function(estado) {
+                    const option = document.createElement('option');
+                    option.text = estado;
+                    stateSelect.add(option);
+                });
+            } else if (countrySelect.value === 'mexico') {
+                const estadosMexico = ['Ciudad de México', 'Jalisco', 'Nuevo León', 'Puebla'];
+                estadosMexico.forEach(function(estado) {
+                    const option = document.createElement('option');
+                    option.text = estado;
+                    stateSelect.add(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
 Comprimir carpetas y archivos Aqui.
 try
         {
